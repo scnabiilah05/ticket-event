@@ -1,0 +1,170 @@
+:root {
+  /* Font Declarations */
+  --font-poppins: 'Poppins', sans-serif;
+  --font-akira: 'Akira', sans-serif;
+  --font-barlow: 'Barlow', sans-serif;
+  --font-exo2: 'Exo2', sans-serif;
+  --font-gelline: 'Gelline', sans-serif;
+  --font-gothic: 'Gothic', sans-serif;
+  --font-langar: 'Langar', sans-serif;
+  --font-netraly: 'Netraly', sans-serif;
+  --font-nicolatte: 'Nicolatte', sans-serif;
+  --font-skywalk: 'SkyWalk', sans-serif;
+  --font-tgsperfect: 'TGSPerfectCondensed', sans-serif;
+  --font-trajan: 'Trajan', sans-serif;
+
+  /* Fonts */
+  --primary-font: var(--font-poppins);
+  --secondary-font: var(--font-akira);
+  --main-bg: url('/images/main-bg.webp');
+  font-family: var(--primary-font);
+
+  /* Main Colors */
+  --blue-primary: #146EF5;
+  --blue-light: #28A8E0;
+  --blue-dark: #292562;
+  --blue-gradient: #094660;
+
+  /* Text Colors */
+  --text-white: #FFFFFF;
+  --text-black: #000000;
+
+  /* Status Colors */
+  --status-red: #d32f2f;
+  --status-yellow: #dfd50c;
+  --status-green: #1a9d1a;
+
+  /* Background Colors */
+  --bg-black: #000000;
+  --bg-brown: #431d04;
+
+  /* Effect Colors */
+  --effect-pink: rgb(29, 86, 230);
+  --effect-blue-transparent: #146ef55a;
+  --effect-blue-transparent-light: #14e6f533;
+
+  /* Button Colors */
+  --button-yellow: #ffb100;
+  --button-blue: #3598b0;
+
+  /* Ticket Status Colors */
+  --ticket-sold-out: red;
+  --ticket-available: rgb(77, 234, 77);
+  --ticket-waitlist: #f0ed4f;
+}
+
+/* Font Face Declarations */
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/font/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Akira';
+  src: url('./assets/font/Akira-Expanded.otf') format('opentype'),
+       url('./assets/font/akira_expanded_sb.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('./assets/font/Barlow-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('./assets/font/Barlow-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Exo2';
+  src: url('./assets/font/Exo2-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gelline';
+  src: url('./assets/font/Gelline.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gothic';
+  src: url('./assets/font/gothic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gothic';
+  src: url('./assets/font/gothicb.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Langar';
+  src: url('./assets/font/Langar-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Netraly';
+  src: url('./assets/font/Netraly.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nicolatte';
+  src: url('./assets/font/NICOLATTE.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SkyWalk';
+  src: url('./assets/font/SkyWalk.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TGSPerfectCondensed';
+  src: url('./assets/font/TGSPerfectCondensed.woff2') format('woff2'),
+       url('./assets/font/TGSPerfectCondensed.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Trajan';
+  src: url('./assets/font/Trajan_Reguler.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Trajan';
+  src: url('./assets/font/Trajan_Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  background-image: var(--main-bg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
