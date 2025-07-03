@@ -36,7 +36,7 @@ const EventCard = ({ event }) => {
           </div>
         </div> */}
         <div className="event-card-footer">
-          <a href={`/event/${event?.link_url}`} className="event-card-button">
+          <a href={`/${event?.id}`} className="event-card-button">
             Details <i className="bi bi-arrow-right"></i>
           </a>
         </div>
