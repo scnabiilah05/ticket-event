@@ -10,8 +10,13 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react()
     ],
+    server: {
+      port: 5200,
+      host: true
+    },
     build: {
       outDir: env.VITE_OUTDIR // gunakan env yang sudah di-load
     }
   }
 })
+

@@ -1,17 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Homepage from './pages/Homepage'
+import { AppRouter } from './router'
 import './App.css'
-import { EventDetailPage } from './pages/EventDetailPage'
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/:id" element={<EventDetailPage />} />
-      </Routes>
-    </Router>
-  )
+  return <AppRouter />
 }
 
 export default App
