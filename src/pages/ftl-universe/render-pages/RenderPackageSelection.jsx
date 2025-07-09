@@ -16,11 +16,6 @@ export const RenderPackageSelection = ({
   const [isGroup, setIsGroup] = useState(null);
   const [packages, setPackages] = useState([]);
 
-  // console.log("selectedTicket", selectedTicket);
-  const filteredPackages = packages.filter((pkg) =>
-    selectedTab === "single" ? pkg.type_group === 0 : pkg.type_group === 1
-  );
-
   const getPackage = async () => {
     let params = { type_ticket_uuid: selectedTicket?.uuid };
 
@@ -45,18 +40,18 @@ export const RenderPackageSelection = ({
       console.error("Error fetching package:", error);
     }
   };
-
+  const selected = selectedPackage || packages[0];
 
   useEffect(() => {
     if (selectedTicket?.uuid) {
       setPackages([])
       getPackage();
-      setSelectedPackage(null)
-    }
+      setSelectedPackage({})
+    } 
   }, [selectedTab]);
 
   // Default select first package if none selected
-  const selected = selectedPackage || packages[0];
+  console.log('selected', selected)
   return (
     <div className="terms-bg">
       <div className="header-row">
@@ -89,7 +84,7 @@ export const RenderPackageSelection = ({
             onClick={() => {
               setSelectedTab("single");
               setIsGroup(0);
-              setSelectedPackage(null);
+              setSelectedPackage({});
             }}
           >
             Single Access
@@ -99,7 +94,7 @@ export const RenderPackageSelection = ({
             onClick={() => {
               setSelectedTab("group");
               setIsGroup(1);
-              setSelectedPackage(null);
+              setSelectedPackage({});
             }}
           >
             Group Pass
@@ -120,7 +115,7 @@ export const RenderPackageSelection = ({
                 className={`package-list-item${
                   selected?.uuid === pkg?.uuid ? " selected" : ""
                 }`}
-                onClick={() => setSelectedPackage(pkg)}
+                onClick={() => {console.log('pkg', pkg);setSelectedPackage(pkg)}}
               >
                 <div className="package-list-title">{pkg?.title}</div>
                 <div className="package-list-price">
@@ -146,7 +141,7 @@ export const RenderPackageSelection = ({
             <div className="package-detail-desc">
               {selected?.description}
             </div>
-            <button className="package-buy-btn">Buy Package</button>
+            <button className="package-buy-btn" onClick={handleNextStep}>Buy Package</button>
           </div>
         </div>
       </div>
@@ -158,9 +153,9 @@ export const RenderPackageSelection = ({
         >
           Back
         </button>
-        <button className="terms-btn terms-btn-next" onClick={handleNextStep}>
+        {/* <button className="terms-btn terms-btn-next" onClick={handleNextStep}>
           Next
-        </button>
+        </button> */}
       </div>
     </div>
   );

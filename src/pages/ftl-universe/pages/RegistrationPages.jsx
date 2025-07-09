@@ -24,7 +24,8 @@ const RegistrationPages = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [currentStep, setCurrentStep] = useState(STEPS.TICKET_SELECTION);
   const [selectedTab, setSelectedTab] = useState('single');
-  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [selectedPackage, setSelectedPackage] = useState({});
+  const [selectedClass, setSelectedClass] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
   
   // Countdown timer state
@@ -128,17 +129,25 @@ const RegistrationPages = () => {
     />
   );
 
+  // console.log('selectedPackage', selectedPackage)
+
   const renderFormInformation = () => (
+
     <RenderFormInformation 
       handleNextStep={handleNextStep}
       handlePreviousStep={handlePreviousStep}
+      lengthMember={selectedPackage?.total_member}
+      selectedPackage={selectedPackage}
     />
   );
 
   const renderClassSelection = () => (
     <RenderClassSelection 
+      selectedPackage={selectedPackage}
       handleNextStep={handleNextStep}
       handlePreviousStep={handlePreviousStep}
+      selectedClass={selectedClass}
+      setSelectedClass={setSelectedClass}
     />
   );
 
