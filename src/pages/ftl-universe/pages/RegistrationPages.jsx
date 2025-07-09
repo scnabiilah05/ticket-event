@@ -38,13 +38,13 @@ const RegistrationPages = () => {
   const getTicketEvent = async () => {
     setIsLoading({ ...isLoading, ticketEvent: true });
     try {
-      const response = await axios.get("/ticket-event");
-      if (response.status === 200 && response.data.length > 0) {
-        setTicketEvent(response.data);
+      const response = await axios.get("/universe/get_type");
+      if (response.data.status == 'success') {
+        setTicketEvent(response.data.data);
       }
     } catch (error) {
       console.error(error);
-      setTicketEvent(tickets);
+      // setTicketEvent(tickets);
     } finally {
       setIsLoading({ ...isLoading, ticketEvent: false });
     }

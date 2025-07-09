@@ -14,19 +14,20 @@ export const RenderTermConditions = ({ handleNextStep, handlePreviousStep }) => 
 
   return (
     <div className="terms-bg">
-      <div className="terms-header-row">
+      <div className="header-row">
         <div>
-          <h2 className="terms-title">Terms & Conditions</h2>
-          <p className="terms-desc">
+          <h2 className="title-header">Terms & Conditions</h2>
+          <p className="desc-header">
             Please read carefully before completing your ticket purchase
           </p>
         </div>
         <img
           src="/images/Universe Logo - Transparent.png"
           alt="FTL Universe Logo"
-          className="terms-logo"
+          className="logo-header"
         />
       </div>
+      <div className="divider-header"></div>
       <div className="terms-card">
         {termsList?.map((term, idx) => (
           <div className="terms-item" key={idx}>

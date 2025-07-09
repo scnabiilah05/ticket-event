@@ -9,6 +9,8 @@ export const RenderTicketSelection = ({
   handleSelectTicket,
   ticketEvent,
 }) => {
+  // Filter tickets based on status
+  const filteredTickets = ticketEvent?.filter(ticket => ticket.status !== -1) || [];
 
   return (
     <>
@@ -71,18 +73,39 @@ export const RenderTicketSelection = ({
           </p>
         </div>
         <div className="ticket-grid">
-          {ticketEvent?.slice(0, 3).map((tic) => (
+          {filteredTickets?.slice(0, 3).map((tic) => (
             <div
               className={`ticket-card-new ${
-                selectedTicket?.id === tic?.id ? "ticket-card-selected" : ""
-              }`}
-              key={tic?.id}
+                selectedTicket?.uuid === tic?.uuid ? "ticket-card-selected" : ""
+              } ${tic?.status === 0 ? "ticket-card-locked" : ""}`}
+              key={tic?.uuid}
             >
               <div className="ticket-card-header">
-                <div className="ticket-type">{tic?.ticket_name}</div>
-                <div className="ticket-badge">Popular</div>
+                <div className="ticket-type">{tic?.title}</div>
+                {tic?.status === 1 && ( //ubah jadi 0
+                  <div className="ticket-badge locked">
+                    <span className="lock-icon">🔒</span>
+                    Locked
+                  </div>
+                )}
+                {tic?.status === 0 && ( //ubah jadi 1
+                  <div className="ticket-badge">Available</div>
+                )}
               </div>
-              <div className="ticket-price-section">
+              {tic?.description && (
+                <div className="ticket-description">
+                  {tic.description}
+                </div>
+              )}
+              <div className="ticket-dates">
+                <div className="date-range">
+                  <span className="date-label">Available:</span>
+                  <span className="date-value">
+                    {new Date(tic?.start_date).toLocaleDateString()} - {new Date(tic?.end_date).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+              {/* <div className="ticket-price-section">
                 <div className="price-label">Starting from</div>
                 <div className="price-amount">
                   <span className="currency">Rp</span>
@@ -91,18 +114,28 @@ export const RenderTicketSelection = ({
                   </span>
                   <span className="price-period">/class</span>
                 </div>
-              </div>
+              </div> */}
               <button
+                // className={`ticket-select-btn ${
+                //   isSelecting && selectedTicket?.uuid === tic?.uuid
+                //     ? "ticket-select-btn-loading"
+                //     : ""
+                // } ${tic?.status === 0 ? "ticket-select-btn-disabled" : ""}`}
+                // onClick={() => tic?.status === 1 && handleSelectTicket(tic)}
+                // disabled={isSelecting || tic?.status === 0}
+
                 className={`ticket-select-btn ${
-                  isSelecting && selectedTicket?.id === tic?.id
+                  isSelecting && selectedTicket?.uuid === tic?.uuid
                     ? "ticket-select-btn-loading"
                     : ""
-                }`}
-                onClick={() => handleSelectTicket(tic)}
-                disabled={isSelecting}
+                } ${tic?.status === 0 ? "ticket-select-btn-disabled" : ""}`}
+                onClick={() => tic?.status === 0 && handleSelectTicket(tic)}
+                disabled={isSelecting || tic?.status === -1}
               >
-                {isSelecting && selectedTicket?.id === tic?.id
+                {isSelecting && selectedTicket?.uuid === tic?.uuid
                   ? "Selecting..."
+                  : tic?.status === 1 //ubah jadi 0
+                  ? "Locked"
                   : "Select Ticket"}
               </button>
             </div>

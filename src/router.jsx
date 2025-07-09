@@ -4,6 +4,7 @@ import { EventDetailPage } from './pages/EventDetailPage'
 import ComingSoonPage from './pages/ftl-universe/pages/ComingSoonPage'
 import React from 'react'
 import RegistrationPages from './pages/ftl-universe/pages/RegistrationPages'
+import ThankyouPage from './pages/ftl-universe/pages/ThankyouPage'
 
 const routes = [
     {
@@ -38,6 +39,14 @@ const routes = [
       component: RegistrationPages,
       meta: {
         title: 'Registration'
+      }
+    },
+    {
+      path: '/thankyou',
+      name: 'thankyou',
+      component: ThankyouPage,
+      meta: {
+        title: 'Thank You'
       }
     }
 ]
