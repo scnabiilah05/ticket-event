@@ -51,7 +51,7 @@ const checkDuplicateData = (formDataArray, currentIndex, field, value) => {
   });
 };
 
-const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMember = 2, selectedPackage }) => {
+const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMember, selectedPackage }) => {
   const [isLoading, setIsLoading] = useState({getMember: false, checkMember: false});
   const [activeStep, setActiveStep] = useState(0); // index of open accordion
   const [formDataArray, setFormDataArray] = useState(
@@ -132,7 +132,6 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
     if (validateForm(idx)) {
       const isMember = await checkMember(formDataArray[idx].ektp, formDataArray[idx].email);
 
-      // return console.log('isMember:', isMember, formDataArray[idx].memberType);
       if (isMember.status && formDataArray[idx].memberType === 'general') {
         setPopup({ show: true, message: isMember.message, type: 'error' });
         return;
@@ -141,14 +140,25 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
       if (idx < lengthMember - 1) {
         setActiveStep(idx + 1);
       } else {
+        // Check if there are any duplicate errors before proceeding
+        const hasDuplicateErrors = formDataArray.some((_, formIdx) => {
+          const errors = formErrors[formIdx];
+          return errors.memberIdDuplicate || errors.ektpDuplicate || errors.emailDuplicate || errors.phoneDuplicate;
+        });
+        
+        if (hasDuplicateErrors) {
+          setPopup({ show: true, message: 'Please resolve duplicate data before proceeding.', type: 'error' });
+          return;
+        }
+        
         const allFormsValid = formDataArray.every((_, formIdx) => !hasFormErrors(formIdx));
         
-                  if (allFormsValid) {
-            console.log('formDataArray:', formDataArray);
-            handleNextStep();
-          } else {
-            setPopup({ show: true, message: 'Please complete all forms correctly before proceeding.', type: 'error' });
-          }
+        if (allFormsValid) {
+          console.log('formDataArray:', formDataArray);
+          handleNextStep();
+        } else {
+          setPopup({ show: true, message: 'Please complete all forms correctly before proceeding.', type: 'error' });
+        }
       }
     }
   };
@@ -197,7 +207,29 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
   };
 
   const isFormComplete = (idx) => {
-    return !hasFormErrors(idx);
+    const data = formDataArray[idx];
+    const errors = { ...DEFAULT_ERROR };
+    
+    // Member ID: hanya jika member
+    errors.memberId = data.memberType === "member"
+      ? !data.memberId.trim()
+      : false;
+    
+    // E-KTP: 16 digit
+    errors.ektp = !/^\d{16}$/.test(data.ektp);
+    
+    // First Name
+    errors.firstName = !data.firstName.trim();
+    // Last Name
+    errors.lastName = !data.lastName.trim();
+    // Email
+    errors.email = !validateEmail(data.email);
+    // Phone
+    errors.phone = !validatePhone(data.phone);
+    
+    // Don't consider duplicate errors as blocking form completion
+    // This allows users to continue even if there are duplicates
+    return !Object.values(errors).some(Boolean);
   };
 
   const arePreviousFormsComplete = (idx) => {
@@ -226,7 +258,6 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
         params: params,
       });
 
-      console.log('response:', response.data);
       if (response.data.status == 'success') {
         const data = await response.data.data;
         setFormDataArray(prev => {
@@ -237,9 +268,12 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
           updated[idx].phone = data.phone;
           return updated;
         });
+      } else {
+        setPopup({ show: true, message: response.data.message || 'Failed to fetch member data', type: 'error' });
       }
     } catch (error) {
       console.error('Error fetching member:', error);
+      setPopup({ show: true, message: 'Member not found. Please ensure that both the Member ID and National ID (KTP) number are correct.', type: 'error' });
     } finally {
       setIsLoading({...isLoading, getMember: false});
     }

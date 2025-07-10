@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../pages/RegistrationPages.css";
-import { packages } from "../../../datas/ftl-universe/packages";
 import { formatPrice, formatPriceFromString } from "../../../utils/PriceUtils";
 import axios from "axios";
 
@@ -12,8 +11,9 @@ export const RenderPackageSelection = ({
   setSelectedPackage,
   handlePreviousStep,
   handleNextStep,
+  isGroup,
+  setIsGroup,
 }) => {
-  const [isGroup, setIsGroup] = useState(null);
   const [packages, setPackages] = useState([]);
 
   const getPackage = async () => {
@@ -25,33 +25,34 @@ export const RenderPackageSelection = ({
       params.is_group = isGroup;
     }
 
-    console.log('params', params)
-
     try {
       const response = await axios.get(`/universe/get_package`, {
         params: params,
       });
-      console.log(response.data, '911')
       if (response.data.status == 'success') {
         const data = await response.data.data;
         setPackages(data);
+
+
+        if (isGroup == null  && selectedPackage == null) {
+          setSelectedPackage(data[0]);
+        } else if ((isGroup == 1 || isGroup == 0) && selectedPackage == null) {
+          setSelectedPackage(data[0]);
+        }
       }
     } catch (error) {
       console.error("Error fetching package:", error);
     }
   };
-  const selected = selectedPackage || packages[0];
 
   useEffect(() => {
     if (selectedTicket?.uuid) {
       setPackages([])
       getPackage();
-      setSelectedPackage({})
     } 
   }, [selectedTab]);
 
   // Default select first package if none selected
-  console.log('selected', selected)
   return (
     <div className="terms-bg">
       <div className="header-row">
@@ -84,7 +85,7 @@ export const RenderPackageSelection = ({
             onClick={() => {
               setSelectedTab("single");
               setIsGroup(0);
-              setSelectedPackage({});
+              setSelectedPackage(null);
             }}
           >
             Single Access
@@ -94,7 +95,7 @@ export const RenderPackageSelection = ({
             onClick={() => {
               setSelectedTab("group");
               setIsGroup(1);
-              setSelectedPackage({});
+              setSelectedPackage(null);
             }}
           >
             Group Pass
@@ -113,9 +114,9 @@ export const RenderPackageSelection = ({
               <div
                 key={pkg?.uuid}
                 className={`package-list-item${
-                  selected?.uuid === pkg?.uuid ? " selected" : ""
+                  selectedPackage?.uuid === pkg?.uuid ? " selected" : ""
                 }`}
-                onClick={() => {console.log('pkg', pkg);setSelectedPackage(pkg)}}
+                onClick={() => {setSelectedPackage(pkg); setIsGroup(pkg?.is_group)}}
               >
                 <div className="package-list-title">{pkg?.title}</div>
                 <div className="package-list-price">
@@ -128,18 +129,18 @@ export const RenderPackageSelection = ({
           <div className="package-detail-col">
             <div className="package-detail-header-row">
               <div className="package-detail-title">
-                {selected?.title}
+                {selectedPackage?.title}
               </div>
               <div className="package-detail-price">
                 Rp{" "}
-                {formatPriceFromString(selected?.price)}
+                {formatPriceFromString(selectedPackage?.price)}
               </div>
             </div>
             <div className="package-divider-header"></div>
 
             <div className="package-detail-desc-label">Detail Package</div>
             <div className="package-detail-desc">
-              {selected?.description}
+              {selectedPackage?.description}
             </div>
             <button className="package-buy-btn" onClick={handleNextStep}>Buy Package</button>
           </div>

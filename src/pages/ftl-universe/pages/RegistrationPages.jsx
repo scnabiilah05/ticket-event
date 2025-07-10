@@ -24,8 +24,9 @@ const RegistrationPages = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [currentStep, setCurrentStep] = useState(STEPS.TICKET_SELECTION);
   const [selectedTab, setSelectedTab] = useState('single');
-  const [selectedPackage, setSelectedPackage] = useState({});
+  const [selectedPackage, setSelectedPackage] = useState(null);
   const [selectedClass, setSelectedClass] = useState(null);
+  const [isGroup, setIsGroup] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
   
   // Countdown timer state
@@ -67,7 +68,7 @@ const RegistrationPages = () => {
     setCurrentStep(prev => prev - 1);
     // Reset related states when going back
     if (currentStep === STEPS.PACKAGE_SELECTION) {
-      setSelectedPackage(null);
+      // setSelectedPackage(null);
     }
     if (currentStep === STEPS.FORM_INFORMATION) {
       // Reset form states if any
@@ -126,17 +127,19 @@ const RegistrationPages = () => {
       setSelectedPackage={setSelectedPackage}
       handlePreviousStep={handlePreviousStep}
       handleNextStep={handleNextStep}
+      isGroup={isGroup}
+      setIsGroup={setIsGroup}
     />
   );
 
-  // console.log('selectedPackage', selectedPackage)
 
   const renderFormInformation = () => (
 
     <RenderFormInformation 
       handleNextStep={handleNextStep}
       handlePreviousStep={handlePreviousStep}
-      lengthMember={selectedPackage?.total_member}
+      // lengthMember={selectedPackage?.total_member}
+      lengthMember={2}
       selectedPackage={selectedPackage}
     />
   );
