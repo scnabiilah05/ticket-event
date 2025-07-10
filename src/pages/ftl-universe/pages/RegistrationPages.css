@@ -1217,16 +1217,16 @@
 .class-selection-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 20px;
   max-width: 1200px;
-  margin: 48px auto 0 auto;
+  margin: 20px auto 0 auto;
   align-items: flex-start;
 }
 .class-selection-left, .class-selection-right {
   background: #fff;
-  border-radius: 22px;
+  border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
-  padding: 32px 32px 24px 32px;
+  padding: 20px 20px 20px 20px;
   width: 100%;
 }
 .vip-info-box {

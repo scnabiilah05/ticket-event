@@ -151,6 +151,7 @@ const RegistrationPages = () => {
       handlePreviousStep={handlePreviousStep}
       selectedClass={selectedClass}
       setSelectedClass={setSelectedClass}
+      lengthClass={selectedPackage?.total_class}
     />
   );
 
