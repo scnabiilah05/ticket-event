@@ -282,7 +282,7 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
   const checkMember = async (ktp, email) => {
     setIsLoading({...isLoading, checkMember: true});
 
-    let params = { id_gymmaster: ktp };
+    let params = { ktp: ktp };
     if (email === "" || email === null) {
       params = { email: email };
     }

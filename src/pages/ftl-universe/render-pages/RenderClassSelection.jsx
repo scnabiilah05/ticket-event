@@ -1,71 +1,59 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { formatPriceFromString } from "../../../utils/PriceUtils";
+import { formatPrice, formatPriceFromString } from "../../../utils/PriceUtils";
+import { RiVipCrownFill } from "react-icons/ri";
 
 const VIP_PRICE = import.meta.env.VITE_VIP_CLASS_PRICE;
+const ALL_CLASS_ID = import.meta.env.VITE_ALL_CLASS_ID;
 
 export const RenderClassSelection = ({
   selectedPackage,
-  handleNextStep,
+  // handleNextStep,
   handlePreviousStep,
   formDataArray,
   lengthClass,
 }) => {
   // State untuk slot kelas dinamis
   const [selectedClasses, setSelectedClasses] = useState(
-    Array.from({ length: lengthClass }, () => "")
-  );
-  const [vipUpgrades, setVipUpgrades] = useState(
-    Array.from({ length: lengthClass }, () => false)
+    Array.from({ length: lengthClass }, () => ({ id: "", is_vip: false }))
   );
 
   const [classes, setClasses] = useState([]);
   const [isLoading, setIsLoading] = useState({ getClasses: false });
+  const [popup, setPopup] = useState({ show: false, message: '', type: 'info' });
 
   // Handler pilih kelas
   const handleClassChange = (idx, value) => {
     setSelectedClasses((prev) => {
       const updated = [...prev];
-      updated[idx] = value;
+      updated[idx] = { ...updated[idx], id: value };
+      // Reset VIP jika kelas dikosongkan
+      if (!value) updated[idx].is_vip = false;
       return updated;
     });
-    // Reset VIP jika kelas dikosongkan
-    if (!value) {
-      setVipUpgrades((prev) => {
-        const updated = [...prev];
-        updated[idx] = false;
-        return updated;
-      });
-    }
   };
 
   // Handler toggle VIP
   const handleVipToggle = (idx) => {
-    setVipUpgrades((prev) => {
+    setSelectedClasses((prev) => {
       const updated = [...prev];
-      updated[idx] = !updated[idx];
+      updated[idx] = { ...updated[idx], is_vip: !updated[idx].is_vip };
       return updated;
     });
   };
 
-  // Kelas yang sudah dipilih di slot lain
+  // getAvailableOptions menyesuaikan ke selectedClasses[idx].id
   const getAvailableOptions = (idx) => {
     let filtered = classes.filter(
-      (cls) => !selectedClasses.some((sel, i) => sel === cls.id && i !== idx)
+      (cls) => !selectedClasses.some((sel, i) => sel.id == cls.id && i !== idx)
     );
-
-    // Kondisi khusus untuk paket bundling
     if (selectedPackage?.uuid === import.meta.env.VITE_BUNDLING_CLASS_ID) {
-      // Jika memilih kelas kedua (idx === 1)
-      if (idx === 1 && selectedClasses[0]) {
-        const kelasPertama = classes.find((c) => c.id == selectedClasses[0]);
+      if (idx === 1 && selectedClasses[0].id) {
+        const kelasPertama = classes.find((c) => c.id == selectedClasses[0].id);
         if (kelasPertama && kelasPertama.is_bundling === 0) {
-          // Hanya tampilkan kelas dengan is_bundling = 1
           filtered = filtered.filter((cls) => cls.is_bundling === 1);
         }
-        // Jika kelas pertama is_bundling=1, kelas kedua bebas
       }
-      // Jika memilih kelas pertama, tidak ada filter khusus
     }
     return filtered;
   };
@@ -87,19 +75,48 @@ export const RenderClassSelection = ({
     }
   };
 
+  const handleNextStep = () => {
+    console.log(selectedClasses, 'selectedClasses')
+    console.log(formDataArray, 'formDataArray')
+    console.log(selectedPackage, 'selectedPackage')
+    console.log(totalPayment, 'totalPayment')
+  }
 
-  
+  const handleNextStepWithValidation = () => {
+    const allSelected = selectedClasses.every(cls => cls.id);
+    if (!allSelected) {
+      setPopup({ show: true, message: 'Silakan pilih semua kelas terlebih dahulu!', type: 'error' });
+      return;
+    }
+    handleNextStep();
+  };
+
 
   useEffect(() => {
     getClasses();
   }, []);
 
+  useEffect(() => {
+    // Jika paket all-class, auto pilih semua kelas dan disable select
+    if (selectedPackage?.uuid === ALL_CLASS_ID) {
+      setSelectedClasses(
+        Array.from({ length: lengthClass }, (_, idx) => ({
+          id: classes[idx]?.id || '',
+          is_vip: false
+        }))
+      );
+    }
+  }, [selectedPackage, classes, lengthClass]);
+
   // Summary
   const chosenClasses = selectedClasses.filter(Boolean);
   const chosenPackage = `${chosenClasses.length} Classes`;
   const chosenPackagePrice = Number(selectedPackage?.price)
-  const vipAddOns = vipUpgrades.filter(Boolean)
-  const totalVip = vipAddOns?.length * VIP_PRICE;
+  const vipAddOns = selectedClasses.filter((clsObj) => clsObj.is_vip && clsObj.id);
+  let totalVip = vipAddOns?.length * VIP_PRICE;
+  if (selectedPackage?.is_group === 1) {
+    totalVip = totalVip * Number(selectedPackage?.total_member || 1);
+  }
   const totalPayment = chosenPackagePrice + totalVip;
 
   return (
@@ -148,9 +165,9 @@ export const RenderClassSelection = ({
                   <label className="switch">
                     <input
                       type="checkbox"
-                      checked={vipUpgrades[idx]}
+                      checked={selectedClasses[idx].is_vip}
                       onChange={() => handleVipToggle(idx)}
-                      disabled={!selectedClasses[idx]}
+                      disabled={!selectedClasses[idx].id}
                     />
                     <span className="slider round"></span>
                   </label>
@@ -158,15 +175,15 @@ export const RenderClassSelection = ({
               </div>
               <select
                 className="class-slot-select"
-                value={selectedClasses[idx]}
+                value={selectedClasses[idx].id}
                 onChange={(e) => handleClassChange(idx, e.target.value)}
-                onFocus={getClasses} // fetch ulang saat select dibuka
+                onFocus={getClasses}
+                disabled={selectedPackage?.uuid === ALL_CLASS_ID}
               >
                 <option value="">
-                  {idx === lengthClass - 1
-                    ? "Choose your class"
-                    : classes[idx]?.classname || "Choose your class"}
+                  { "Choose your class"}
                 </option>
+                
                 {getAvailableOptions(idx).map((cls) => {
                   const slotTersisa = cls.max_students - cls.terdaftar;
                   return (
@@ -190,13 +207,14 @@ export const RenderClassSelection = ({
             <div className="summary-section">
               <div className="summary-section-title">Chosen Class</div>
               <div className="summary-chosen-class-list">
-                {selectedClasses.map((clsId, idx) => {
-                  const found = classes.find((c) => c.id == clsId);
+                {selectedClasses.map((clsObj, idx) => {
+                  const found = classes.find((c) => c.id == clsObj.id);
                   return found ? (
                     <div className="summary-chosen-class-item" key={idx}>
                       {found.classname}
-                      {vipUpgrades[idx] && (
+                      {clsObj.is_vip && (
                         <span className="vip-badge small">VIP</span>
+                        // <RiVipCrownFill className="vip-badge small" />
                       )}
                     </div>
                   ) : null;
@@ -218,14 +236,18 @@ export const RenderClassSelection = ({
                 {vipAddOns?.length === 0 && (
                   <div className="summary-addons-empty">-</div>
                 )}
-                {vipAddOns?.map((clsId, idx) => {
-                  const found = classes.find((c) => c.id == clsId);
+                {vipAddOns?.map((clsObj, idx) => {
+                  const found = classes.find((c) => c.id == clsObj.id);
                   return found ? (
-                    <div className="summary-addons-item" key={clsId}>
+                    <div className="summary-addons-item" key={clsObj.id}>
                       <span>
                         {found.classname} <span className="vip-badge small">VIP</span>
                       </span>
-                      <span>Rp{VIP_PRICE.toLocaleString()}</span>
+                      <span>
+                        Rp{selectedPackage?.is_group === 1
+                          ? `${formatPrice(VIP_PRICE)} x ${selectedPackage?.total_member} member`
+                          : formatPrice(VIP_PRICE)}
+                      </span>
                     </div>
                   ) : null;
                 })}
@@ -238,11 +260,11 @@ export const RenderClassSelection = ({
               </span>
             </div>
             <div className="summary-btn-row">
-              <button className="summary-prev-btn" onClick={handlePreviousStep}>
+              {/* <button className="summary-prev-btn" onClick={handlePreviousStep}>
                 Previous
-              </button>
-              <button className="summary-next-btn" onClick={handleNextStep}>
-                Next
+              </button> */}
+              <button className="summary-next-btn" onClick={handleNextStepWithValidation}>
+                Payment
               </button>
             </div>
           </div>
@@ -257,6 +279,19 @@ export const RenderClassSelection = ({
           Back
         </button>
       </div>
+      {popup.show && (
+        <div className="popup-overlay" onClick={() => setPopup({ show: false, message: '', type: 'info' })}>
+          <div className="popup-content" onClick={e => e.stopPropagation()}>
+            <div className={`popup-icon ${popup.type}`}>
+              {popup.type === 'error' ? '⚠️' : 'ℹ️'}
+            </div>
+            <div className="popup-message">{popup.message}</div>
+            <button className="popup-button" onClick={() => setPopup({ show: false, message: '', type: 'info' })}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

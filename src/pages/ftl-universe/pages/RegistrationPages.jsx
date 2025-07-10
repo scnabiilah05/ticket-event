@@ -18,6 +18,16 @@ const STEPS = {
   // Add more steps here as needed
 };
 
+const DEFAULT_FORM = {
+  memberType: "member",
+  memberId: "",
+  ektp: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+};
+
 const RegistrationPages = () => {
   const [isLoading, setIsLoading] = useState({ticketEvent: false});
   const [ticketEvent, setTicketEvent] = useState([]);
@@ -28,6 +38,10 @@ const RegistrationPages = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [isGroup, setIsGroup] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
+
+  const [formDataArray, setFormDataArray] = useState(
+    Array.from({ length: selectedPackage?.total_member }, () => ({ ...DEFAULT_FORM }))
+  );
   
   // Countdown timer state
   const [timeLeft, setTimeLeft] = useState({
@@ -79,22 +93,22 @@ const RegistrationPages = () => {
   };
 
   // Countdown timer effect
-  useEffect(() => {
-    const targetDate = new Date('2025-08-15T00:00:00').getTime();
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance > 0) {
-        setTimeLeft({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        });
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  // useEffect(() => {
+  //   const targetDate = new Date('2025-08-15T00:00:00').getTime();
+  //   const timer = setInterval(() => {
+  //     const now = new Date().getTime();
+  //     const distance = targetDate - now;
+  //     if (distance > 0) {
+  //       setTimeLeft({
+  //         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+  //         hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+  //         minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+  //         seconds: Math.floor((distance % (1000 * 60)) / 1000)
+  //       });
+  //     }
+  //   }, 1000);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   useEffect(() => {
     getTicketEvent();
@@ -141,6 +155,8 @@ const RegistrationPages = () => {
       // lengthMember={selectedPackage?.total_member}
       lengthMember={2}
       selectedPackage={selectedPackage}
+      formDataArray={formDataArray}
+      setFormDataArray={setFormDataArray}
     />
   );
 
