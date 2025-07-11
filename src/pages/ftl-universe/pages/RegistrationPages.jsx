@@ -7,14 +7,16 @@ import { RenderPackageSelection } from "../render-pages/RenderPackageSelection";
 import { RenderTicketSelection } from "../render-pages/RenderTicketSelection";
 import { RenderFormInformation } from "../render-pages/RenderFormInformation";
 import { RenderClassSelection } from "../render-pages/RenderClassSelection";
+import { RenderCountdownInfo } from "../render-pages/RenderCountdownInfo";
 
 // Step constants for better maintainability
 const STEPS = {
-  TICKET_SELECTION: 1,
-  TERMS_CONDITIONS: 2,
-  PACKAGE_SELECTION: 3,
-  FORM_INFORMATION: 4,
-  CLASS_SELECTION: 5,
+  COUNTDOWN_AND_INFO: 1,
+  TICKET_SELECTION: 2,
+  TERMS_CONDITIONS: 3,
+  PACKAGE_SELECTION: 4,
+  FORM_INFORMATION: 5,
+  CLASS_SELECTION: 6,
   // Add more steps here as needed
 };
 
@@ -33,7 +35,7 @@ const RegistrationPages = () => {
   const [isLoading, setIsLoading] = useState({ticketEvent: false});
   const [ticketEvent, setTicketEvent] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
-  const [currentStep, setCurrentStep] = useState(STEPS.TICKET_SELECTION);
+  const [currentStep, setCurrentStep] = useState(STEPS.COUNTDOWN_AND_INFO);
   const [selectedTab, setSelectedTab] = useState('single');
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [selectedClass, setSelectedClass] = useState(null);
@@ -100,28 +102,39 @@ const RegistrationPages = () => {
   };
 
   // Countdown timer effect
-  // useEffect(() => {
-  //   const targetDate = new Date('2025-08-15T00:00:00').getTime();
-  //   const timer = setInterval(() => {
-  //     const now = new Date().getTime();
-  //     const distance = targetDate - now;
-  //     if (distance > 0) {
-  //       setTimeLeft({
-  //         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-  //         hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-  //         minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-  //         seconds: Math.floor((distance % (1000 * 60)) / 1000)
-  //       });
-  //     }
-  //   }, 1000);
-  //   return () => clearInterval(timer);
-  // }, []);
+  useEffect(() => {
+    const targetDate = new Date('2025-08-15T00:00:00').getTime();
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance > 0) {
+        setTimeLeft({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000)
+        });
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     getTicketEvent();
   }, []);
 
   // Render functions for each step
+  const renderCountdownAndInfo = () => (
+    <RenderCountdownInfo
+      timeLeft={timeLeft}
+      selectedTicket={selectedTicket}
+      handleSelectTicket={handleSelectTicket}
+      ticketEvent={ticketEvent}
+      isSelecting={isSelecting}
+      handleNextStep={handleNextStep}
+    />
+  );
+
   const renderTicketSelection = () => (
     <RenderTicketSelection
       timeLeft={timeLeft}
@@ -179,6 +192,7 @@ const RegistrationPages = () => {
 
   // Step mapping for easy maintenance
   const stepComponents = {
+    [STEPS.COUNTDOWN_AND_INFO]: renderCountdownAndInfo,
     [STEPS.TICKET_SELECTION]: renderTicketSelection,
     [STEPS.TERMS_CONDITIONS]: renderTerms,
     [STEPS.PACKAGE_SELECTION]: renderPackageSelection,
