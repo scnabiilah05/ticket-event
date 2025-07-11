@@ -1,6 +1,6 @@
 export const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-};
+};5
 
 export const formatPriceFromString = (priceString) => {
   // Convert the string to a number

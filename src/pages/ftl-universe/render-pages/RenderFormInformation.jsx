@@ -1,34 +1,63 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../pages/RegistrationPages.css";
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { formatPriceFromString } from "../../../utils/PriceUtils";
 import axios from "axios";
 
 const DEFAULT_FORM = {
-  memberType: "member",
-  memberId: "",
-  ektp: "",
-  firstName: "",
-  lastName: "",
+  is_member: 1,
+  id_gymmaster: "",
+  ktp: "",
+  first_name: "",
+  last_name: "",
   email: "",
   phone: "",
+  instagram: "",
 };
 
 const DEFAULT_ERROR = {
-  memberId: false,
-  memberIdDuplicate: false,
-  ektp: false,
-  ektpDuplicate: false,
-  firstName: false,
-  lastName: false,
+  id_gymmaster: false,
+  id_gymmasterDuplicate: false,
+  is_ktp: false,
+  passpor: false,
+  ktp: false,
+  ktpDuplicate: false,
+  passporDuplicate: false,
+  first_name: false,
+  last_name: false,
   email: false,
   emailDuplicate: false,
   phone: false,
   phoneDuplicate: false,
+
 };
 
 const validateEmail = (email) => /.+@.+\..+/.test(email);
 const validatePhone = (phone) => phone.length >= 8;
+
+
+
+// Validasi paspor yang dinamis untuk berbagai negara
+const validatePassport = (passport) => {
+  if (!passport?.trim()) return false;
+  
+  const cleanPassport = passport?.trim().toUpperCase();
+  
+  // Validasi umum untuk format paspor internasional:
+  // - Panjang 6-9 karakter
+  // - Kombinasi huruf dan angka
+  // - Bisa dimulai dengan huruf atau angka
+  // - Mendukung berbagai format dari berbagai negara
+  const passportRegex = /^[A-Z0-9]{6,9}$/;
+  
+  // Validasi tambahan untuk memastikan tidak semua karakter sama
+  const allSameChar = /^(.)\1*$/;
+  if (allSameChar.test(cleanPassport)) {
+    return false;
+  }
+  
+  return passportRegex.test(cleanPassport);
+};
 
 const checkDuplicateData = (formDataArray, currentIndex, field, value) => {
   if (!value.trim()) return false; 
@@ -37,10 +66,12 @@ const checkDuplicateData = (formDataArray, currentIndex, field, value) => {
     if (index === currentIndex) return false; 
     
     switch (field) {
-      case 'memberId':
-        return data.memberType === 'member' && data.memberId === value;
-      case 'ektp':
-        return data.ektp === value;
+      case 'id_gymmaster':
+        return data.is_member === 1 && data.id_gymmaster === value;
+      case 'ktp':
+        return data.ktp === value;
+      case 'passpor':
+        return data.passpor === value;
       case 'email':
         return data.email === value;
       case 'phone':
@@ -51,17 +82,18 @@ const checkDuplicateData = (formDataArray, currentIndex, field, value) => {
   });
 };
 
-const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMember, selectedPackage }) => {
+const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMember, selectedPackage, formDataArray, setFormDataArray }) => {
   const [isLoading, setIsLoading] = useState({getMember: false, checkMember: false});
   const [activeStep, setActiveStep] = useState(0); // index of open accordion
-  const [formDataArray, setFormDataArray] = useState(
-    Array.from({ length: lengthMember }, () => ({ ...DEFAULT_FORM }))
-  );
   const [formErrors, setFormErrors] = useState(
     Array.from({ length: lengthMember }, () => ({ ...DEFAULT_ERROR }))
   );
   const [popup, setPopup] = useState({ show: false, message: '', type: 'info' });
 
+  // Initialize formErrors when lengthMember changes
+  useEffect(() => {
+    setFormErrors(Array.from({ length: lengthMember }, () => ({ ...DEFAULT_ERROR })));
+  }, [lengthMember]);
 
   // Handler for input change per step
   const handleInputChange = (idx, field, value) => {
@@ -85,27 +117,38 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
     const errors = { ...DEFAULT_ERROR };
     
     // Member ID: hanya jika member
-    errors.memberId = data.memberType === "member"
-      ? !data.memberId.trim()
+    errors.id_gymmaster = data.is_member === 1
+      ? !data.id_gymmaster.trim()
       : false;
     
     // Check for duplicate Member ID
-    if (data.memberType === "member" && data.memberId.trim()) {
-      errors.memberIdDuplicate = checkDuplicateData(formDataArray, idx, 'memberId', data.memberId);
+    if (data.is_member === 1 && data.id_gymmaster.trim()) {
+      errors.id_gymmasterDuplicate = checkDuplicateData(formDataArray, idx, 'id_gymmaster', data.id_gymmaster);
     }
     
-    // E-KTP: 16 digit
-    errors.ektp = !/^\d{16}$/.test(data.ektp);
+    // E-KTP: 16 digit (hanya untuk member)
+    if (data.is_member === 1) {
+      errors.ktp = !/^\d{16}$/.test(data.ktp);
+    } else if (data.is_member === 0 && data.is_ktp === 1) {
+      errors.ktp = !/^\d{16}$/.test(data.ktp);
+    } else if (data.is_member === 0 && data.is_ktp === 0) {
+      errors.passpor = !validatePassport(data.passpor);
+    }
     
-    // Check for duplicate E-KTP
-    if (data.ektp.trim()) {
-      errors.ektpDuplicate = checkDuplicateData(formDataArray, idx, 'ektp', data.ektp);
+    // Check for duplicate E-KTP (hanya untuk member)
+    if (data.is_member === 1 && data.ktp.trim()) {
+      errors.ktpDuplicate = checkDuplicateData(formDataArray, idx, 'ktp', data.ktp);
+    }
+    
+    // Check for duplicate Passport (hanya untuk non-member)
+    if (data.is_member === 0 && data.passpor && data.passpor.trim()) {
+      errors.passporDuplicate = checkDuplicateData(formDataArray, idx, 'passpor', data.passpor);
     }
     
     // First Name
-    errors.firstName = !data.firstName.trim();
+    errors.first_name = !data.first_name.trim();
     // Last Name
-    errors.lastName = !data.lastName.trim();
+    errors.last_name = !data.last_name.trim();
     
     // Email
     errors.email = !validateEmail(data.email);
@@ -125,25 +168,30 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
       updated[idx] = errors;
       return updated;
     });
+
     return !Object.values(errors).some(Boolean);
   };
 
   const handleNext = async (idx) => {
     if (validateForm(idx)) {
-      const isMember = await checkMember(formDataArray[idx].ektp, formDataArray[idx].email);
+      const idNumber = formDataArray[idx].is_member === 1 ? formDataArray[idx].ktp : formDataArray[idx].is_ktp === 1 ? formDataArray[idx].ktp : formDataArray[idx].passpor;
+      console.log('idNumber', idNumber)
+      const isMember = await checkMember(idNumber, formDataArray[idx].email, idx);
 
-      if (isMember.status && formDataArray[idx].memberType === 'general') {
+      if (isMember.status && formDataArray[idx].is_member === 0) {
         setPopup({ show: true, message: isMember.message, type: 'error' });
         return;
       }
 
       if (idx < lengthMember - 1) {
+        console.log('masuk sini lah', isAccordionLocked(idx))
         setActiveStep(idx + 1);
       } else {
+        console.log('masuk sini')
         // Check if there are any duplicate errors before proceeding
         const hasDuplicateErrors = formDataArray.some((_, formIdx) => {
           const errors = formErrors[formIdx];
-          return errors.memberIdDuplicate || errors.ektpDuplicate || errors.emailDuplicate || errors.phoneDuplicate;
+          return errors.id_gymmasterDuplicate || errors.ktpDuplicate || errors.passporDuplicate || errors.emailDuplicate || errors.phoneDuplicate;
         });
         
         if (hasDuplicateErrors) {
@@ -168,27 +216,39 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
     const errors = { ...DEFAULT_ERROR };
     
     // Member ID: hanya jika member
-    errors.memberId = data.memberType === "member"
-      ? !data.memberId.trim()
+    errors.id_gymmaster = data.is_member === 1
+      ? !data.id_gymmaster?.trim()
       : false;
     
     // Check for duplicate Member ID
-    if (data.memberType === "member" && data.memberId.trim()) {
-      errors.memberIdDuplicate = checkDuplicateData(formDataArray, idx, 'memberId', data.memberId);
+    if (data.is_member === 1 && data.id_gymmaster.trim()) {
+      errors.id_gymmasterDuplicate = checkDuplicateData(formDataArray, idx, 'id_gymmaster', data.id_gymmaster);
     }
     
-    // E-KTP: 16 digit
-    errors.ektp = !/^\d{16}$/.test(data.ektp);
+    // E-KTP: 16 digit (hanya untuk member)
+    if (data.is_member === 1) {
+      errors.ktp = !/^\d{16}$/.test(data.ktp);
+    } else if (data.is_member === 0 && data.is_ktp === 1) {
+      errors.ktp = !/^\d{16}$/.test(data.ktp);
+    } else if (data.is_member === 0 && data.is_ktp === 0) {
+      // Passport: menggunakan validasi yang fleksibel untuk berbagai negara (hanya untuk non-member)
+      errors.passpor = !validatePassport(data.passpor);
+    }
     
-    // Check for duplicate E-KTP
-    if (data.ektp.trim()) {
-      errors.ektpDuplicate = checkDuplicateData(formDataArray, idx, 'ektp', data.ektp);
+    // Check for duplicate E-KTP (hanya untuk member)
+    if (data.is_member === 1 && data.ktp.trim()) {
+      errors.ktpDuplicate = checkDuplicateData(formDataArray, idx, 'ktp', data.ktp);
+    }
+    
+    // Check for duplicate Passport (hanya untuk Non-member)
+    if (data.is_member === 0 && data.is_ktp === 0 && data.passpor && data.passpor.trim()) {
+      errors.passporDuplicate = checkDuplicateData(formDataArray, idx, 'passpor', data.passpor);
     }
     
     // First Name
-    errors.firstName = !data.firstName.trim();
+    errors.first_name = !data.first_name;
     // Last Name
-    errors.lastName = !data.lastName.trim();
+    errors.last_name = !data.last_name;
     // Email
     errors.email = !validateEmail(data.email);
     
@@ -211,17 +271,23 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
     const errors = { ...DEFAULT_ERROR };
     
     // Member ID: hanya jika member
-    errors.memberId = data.memberType === "member"
-      ? !data.memberId.trim()
+    errors.id_gymmaster = data.is_member === 1
+      ? !data.id_gymmaster.trim()
       : false;
     
     // E-KTP: 16 digit
-    errors.ektp = !/^\d{16}$/.test(data.ektp);
+    if (data.is_member === 1) {
+      errors.ktp = !/^\d{16}$/.test(data.ktp);
+    } else if (data.is_member === 0 && data.is_ktp === 1) {
+      errors.ktp = !/^\d{16}$/.test(data.ktp);
+    } else if (data.is_member === 0 && data.is_ktp === 0) {
+      errors.passpor = !validatePassport(data.passpor);
+    }
     
     // First Name
-    errors.firstName = !data.firstName.trim();
+    errors.first_name = !data.first_name.trim();
     // Last Name
-    errors.lastName = !data.lastName.trim();
+    errors.last_name = !data.last_name.trim();
     // Email
     errors.email = !validateEmail(data.email);
     // Phone
@@ -245,12 +311,12 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
     return idx > 0 && !arePreviousFormsComplete(idx);
   };
 
-  const getMember = async (ktp, memberId, idx) => {
+  const getMember = async (ktp, id_gymmaster, idx) => {
     setIsLoading({...isLoading, getMember: true});
     let params = { ktp: ktp}
 
-    if (memberId !== ""  || memberId !== null) {
-      params.id_gymmaster = memberId;
+    if (id_gymmaster !== ""  && id_gymmaster !== null) {
+      params.id_gymmaster = id_gymmaster;
     }
 
     try {
@@ -262,8 +328,8 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
         const data = await response.data.data;
         setFormDataArray(prev => {
           const updated = [...prev];
-          updated[idx].firstName = data.first_name;
-          updated[idx].lastName = data.last_name;
+          updated[idx].first_name = data.first_name;
+          updated[idx].last_name = data.last_name;
           updated[idx].email = data.email;
           updated[idx].phone = data.phone;
           return updated;
@@ -344,7 +410,7 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
             >
               <span className="forminfo-step-number">{idx + 1}</span>
               <span className="forminfo-step-title">
-                Detail Information – {formDataArray[idx].memberType === "member" ? `Member ${idx + 1}` : "General"}
+                Detail Information – {formDataArray[idx].is_member === 1 ? `Member ${idx + 1}` : "Non-member"}
                 {/* {hasFormErrors(idx) && <span className="forminfo-step-error-indicator">⚠️</span>} */}
               </span>
               <span className="forminfo-accordion-icon">
@@ -357,66 +423,118 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
                 <>
                   <div className="forminfo-toggle-row">
                     <button
-                      className={`forminfo-toggle-btn${formDataArray[idx].memberType === "member" ? " active" : ""}`}
-                      onClick={() => handleInputChange(idx, "memberType", "member")}
+                      className={`forminfo-toggle-btn${formDataArray[idx].is_member === 1 ? " active" : ""}`}
+                      onClick={() => handleInputChange(idx, "is_member", 1)}
                     >
                       Member
                     </button>
                     <button
-                      className={`forminfo-toggle-btn${formDataArray[idx].memberType === "general" ? " active" : ""}`}
-                      onClick={() => handleInputChange(idx, "memberType", "general")}
+                      className={`forminfo-toggle-btn${formDataArray[idx].is_member === 0 ? " active" : ""}`}
+                      onClick={() => handleInputChange(idx, "is_member", 0)}
                     >
-                      General
+                      Non-member
                     </button>
                   </div>
                   <div className="forminfo-form-row">
-                    {/* Only show Member ID if memberType is 'member' */}
-                    {formDataArray[idx].memberType === "member" && (
-                      <div className="forminfo-form-group forminfo-memberid-group">
-                        <label>Member ID</label>
-                        <input
-                          type="text"
-                          className={`forminfo-input${formErrors[idx].memberId || formErrors[idx].memberIdDuplicate ? " forminfo-error" : ""}`}
-                          placeholder="Input your Member ID"
-                          value={formDataArray[idx].memberId}
-                          onChange={e => handleInputChange(idx, "memberId", e.target.value.replace(/[^0-9]/g, ""))}
-                          inputMode="numeric"
-                        />
-                        {formErrors[idx].memberId && <div className="forminfo-error-msg">Member ID is required</div>}
-                        {formErrors[idx].memberIdDuplicate && <div className="forminfo-error-msg">Member ID already exists</div>}
-                      </div>
-                    )}
+                    {/* Only show Member ID if is_member is 1 */}
+                      {formDataArray[idx].is_member === 1 ? (
+                        <div className="forminfo-form-group forminfo-id_gymmaster-group">
+                          <label>Member ID</label>
+                          <input
+                            type="text"
+                            className={`forminfo-input${formErrors[idx].id_gymmaster || formErrors[idx].id_gymmasterDuplicate ? " forminfo-error" : ""}`}
+                            placeholder="Input your Member ID"
+                            value={formDataArray[idx].id_gymmaster}
+                            onChange={e => handleInputChange(idx, "id_gymmaster", e.target.value.replace(/[^0-9]/g, ""))}
+                            inputMode="numeric"
+                          />
+                          {formErrors[idx].id_gymmaster && <div className="forminfo-error-msg">Member ID is required</div>}
+                          {formErrors[idx].id_gymmasterDuplicate && <div className="forminfo-error-msg">Member ID already exists</div>}
+                        </div>
+                      ) : (
+                        <div className="forminfo-form-group forminfo-id_gymmaster-group">
+                          <label>Select ID</label>
+                          <select
+                            className={`forminfo-input${formErrors[idx].is_ktp ? " forminfo-error" : ""}`}
+                            placeholder="Select ID"
+                            value={formDataArray[idx].is_ktp}
+                            onChange={e => handleInputChange(idx, "is_ktp", e.target.value === "1" ? 1 : 0)}
+                            // inputMode="numeric"
+                          >
+                            <option value="">Select ID</option>
+                            <option value={1}>National ID (KTP)</option>
+                            <option value={0}>Passport</option>
+                          </select>
+                          {formErrors[idx].id_gymmaster && <div className="forminfo-error-msg">Member ID is required</div>}
+                          {formErrors[idx].id_gymmasterDuplicate && <div className="forminfo-error-msg">Member ID already exists</div>}
+                        </div>
+                      )}
                     {/* E-KTP Number */}
-                    <div className={`forminfo-form-group forminfo-ektp-group${formDataArray[idx].memberType === 'general' ? ' forminfo-form-group--full' : ''}`}>
-                      <label>E-KTP Number</label>
+                    {formDataArray[idx].is_member === 1 ? (
+                      <div className={`forminfo-form-group forminfo-ektp-group`}>
+                        <label>National ID (KTP) Number</label>
+                        <div className="forminfo-ektp-row">
+                          <input
+                            type="text"
+                            maxLength={16}
+                            className={`forminfo-ektp-input${formErrors[idx].ktp || formErrors[idx].ktpDuplicate ? " forminfo-error" : ""}`}
+                            placeholder="Input your 16 E-KTP Number"
+                            value={formDataArray[idx].ktp}
+                            onChange={e => handleInputChange(idx, "ktp", e.target.value.replace(/[^0-9]/g, ""))}
+                          />
+                          <button className="forminfo-ektp-search-btn" onClick={() => getMember(formDataArray[idx].ktp, formDataArray[idx].id_gymmaster, idx)}>
+                            {isLoading.getMember ? <div className="forminfo-ektp-search-btn-loading"></div> : <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="9" cy="9" r="7" stroke="#fff" strokeWidth="2"/><path d="M15.5 15.5L18 18" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg>}
+                          </button>
+                        </div>
+                        {formErrors[idx].ktp && <div className="forminfo-error-msg">E-KTP must be 16 digits</div>}
+                        {formErrors[idx].ktpDuplicate && <div className="forminfo-error-msg">E-KTP already exists</div>}
+                      </div>
+                    ) : (
+                      formDataArray[idx].is_member === 0 && formDataArray[idx].is_ktp === 1 ? 
+                      <div className={`forminfo-form-group forminfo-ektp-group`}>
+                      <label>National ID (KTP) Number</label>
                       <div className="forminfo-ektp-row">
                         <input
                           type="text"
                           maxLength={16}
-                          className={`forminfo-ektp-input${formErrors[idx].ektp || formErrors[idx].ektpDuplicate ? " forminfo-error" : ""}`}
+                          className={`forminfo-ektp-input${formErrors[idx].ktp || formErrors[idx].ktpDuplicate ? " forminfo-error" : ""}`}
                           placeholder="Input your 16 E-KTP Number"
-                          value={formDataArray[idx].ektp}
-                          onChange={e => handleInputChange(idx, "ektp", e.target.value.replace(/[^0-9]/g, ""))}
+                          value={formDataArray[idx].ktp}
+                          disabled={formDataArray[idx].is_ktp === null}
+                          onChange={e => handleInputChange(idx, "ktp", e.target.value.replace(/[^0-9]/g, ""))}
                         />
-                        {formDataArray[idx].memberType === "member" && (
-                          <button className="forminfo-ektp-search-btn" onClick={() => getMember(formDataArray[idx].ektp, formDataArray[idx].memberId, idx)}>
-                            {isLoading.getMember ? <div className="forminfo-ektp-search-btn-loading"></div> : <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="9" cy="9" r="7" stroke="#fff" strokeWidth="2"/><path d="M15.5 15.5L18 18" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg>}
-                          </button>
-                        )}
                       </div>
-                      {formErrors[idx].ektp && <div className="forminfo-error-msg">E-KTP must be 16 digits</div>}
-                      {formErrors[idx].ektpDuplicate && <div className="forminfo-error-msg">E-KTP already exists</div>}
-                    </div>
+                      {formErrors[idx].ktp && <div className="forminfo-error-msg">E-KTP must be 16 digits</div>}
+                      {formErrors[idx].ktpDuplicate && <div className="forminfo-error-msg">E-KTP already exists</div>}
+                    </div> : (
+                      <div className={`forminfo-form-group forminfo-ektp-group`}>
+                        <label>Passport Number</label>
+                        <div className="forminfo-ektp-row">
+                          <input
+                            type="text"
+                            maxLength={9}
+                            className={`forminfo-ektp-input${formErrors[idx].passpor || formErrors[idx].passporDuplicate ? " forminfo-error" : ""}`}
+                            placeholder="e.g., A1234567, M12345678, TR1234567"
+                            value={formDataArray[idx].passpor}
+                            disabled={formDataArray[idx].is_ktp === null}
+                            onChange={e => handleInputChange(idx, "passpor", e.target.value.replace(/[^A-Za-z0-9]/g, "").toUpperCase())}
+                          />
+                        </div>
+                        {formErrors[idx].passpor && <div className="forminfo-error-msg">Passport number must be 6-9 characters (letters and numbers only)</div>}
+                        {formErrors[idx].passporDuplicate && <div className="forminfo-error-msg">Passport already exists</div>}
+                      </div>
+                      )
+                    )}
                     {/* First Name & Email */}
                     <div className="forminfo-form-group-row">
                       <div className="forminfo-form-group">
                         <label>First Name</label>
-                        <input type="text" disabled={formDataArray[idx].memberType === "member"} className={`forminfo-input${formErrors[idx].firstName ? " forminfo-error" : ""}`} placeholder={formDataArray[idx].memberType === "general" ? "Input your first name" : ""} value={formDataArray[idx].firstName} onChange={e => handleInputChange(idx, "firstName", e.target.value)} />
-                        {formErrors[idx].firstName && <div className="forminfo-error-msg">First Name is required</div>}
+                        <input type="text" disabled={formDataArray[idx].is_member === 1} className={`forminfo-input${formErrors[idx].first_name ? " forminfo-error" : ""}`} placeholder={formDataArray[idx].is_member === 0 ? "Input your first name" : ""} value={formDataArray[idx].first_name} onChange={e => handleInputChange(idx, "first_name", e.target.value)} />
+                        {formErrors[idx].first_name && <div className="forminfo-error-msg">First Name is required</div>}
                       </div>
                       <div className="forminfo-form-group" style={{ marginTop: '16px' }}>
                         <label>E-mail</label>
-                        <input type="email" disabled={formDataArray[idx].memberType === "member"} className={`forminfo-input${formErrors[idx].email || formErrors[idx].emailDuplicate ? " forminfo-error" : ""}`} placeholder={formDataArray[idx].memberType === "general" ? "Input your email address" : ""} value={formDataArray[idx].email} onChange={e => handleInputChange(idx, "email", e.target.value)} />
+                        <input type="email" disabled={formDataArray[idx].is_member === 1} className={`forminfo-input${formErrors[idx].email || formErrors[idx].emailDuplicate ? " forminfo-error" : ""}`} placeholder={formDataArray[idx].is_member === 0 ? "Input your email address" : ""} value={formDataArray[idx].email} onChange={e => handleInputChange(idx, "email", e.target.value)} />
                         {formErrors[idx].email && <div className="forminfo-error-msg">Valid email is required</div>}
                         {formErrors[idx].emailDuplicate && <div className="forminfo-error-msg">Email already exists</div>}
                       </div>
@@ -425,16 +543,29 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
                     <div className="forminfo-form-group-row">
                       <div className="forminfo-form-group">
                         <label>Last Name</label>
-                        <input type="text" disabled={formDataArray[idx].memberType === "member"} className={`forminfo-input${formErrors[idx].lastName ? " forminfo-error" : ""}`} placeholder={formDataArray[idx].memberType === "general" ? "Input your last name" : ""} value={formDataArray[idx].lastName} onChange={e => handleInputChange(idx, "lastName", e.target.value)} />
-                        {formErrors[idx].lastName && <div className="forminfo-error-msg">Last Name is required</div>}
+                        <input type="text" disabled={formDataArray[idx].is_member === 1} className={`forminfo-input${formErrors[idx].last_name ? " forminfo-error" : ""}`} placeholder={formDataArray[idx].is_member === 0 ? "Input your last name" : ""} value={formDataArray[idx].last_name} onChange={e => handleInputChange(idx, "last_name", e.target.value)} />
+                        {formErrors[idx].last_name && <div className="forminfo-error-msg">Last Name is required</div>}
                       </div>
                       <div className="forminfo-form-group" style={{ marginTop: '16px' }}>
                         <label>Phone Number</label>
-                        <input type="text" disabled={formDataArray[idx].memberType === "member"} className={`forminfo-input${formErrors[idx].phone || formErrors[idx].phoneDuplicate ? " forminfo-error" : ""}`} placeholder={formDataArray[idx].memberType === "general" ? "Input your phone number" : ""} value={formDataArray[idx].phone} onChange={e => handleInputChange(idx, "phone", e.target.value.replace(/[^0-9+]/g, ""))} />
+                        <input type="text" disabled={formDataArray[idx].is_member === 1} className={`forminfo-input${formErrors[idx].phone || formErrors[idx].phoneDuplicate ? " forminfo-error" : ""}`} placeholder={formDataArray[idx].is_member === 0 ? "Input your phone number" : ""} value={formDataArray[idx].phone} onChange={e => handleInputChange(idx, "phone", e.target.value.replace(/[^0-9+]/g, ""))} />
                         {formErrors[idx].phone && <div className="forminfo-error-msg">Valid phone number is required</div>}
                         {formErrors[idx].phoneDuplicate && <div className="forminfo-error-msg">Phone number already exists</div>}
                       </div>
                     </div>
+                    {/* Instagram (Optional for Non-member users) */}
+                    {formDataArray[idx].is_member === 0 && (
+                      <div className="forminfo-form-group">
+                        <label>Instagram Username <span style={{ color: '#999', fontSize: '12px' }}>(Optional)</span></label>
+                        <input 
+                          type="text" 
+                          className="forminfo-input" 
+                          placeholder="e.g., @username or username" 
+                          value={formDataArray[idx].instagram} 
+                          onChange={e => handleInputChange(idx, "instagram", e.target.value)} 
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="forminfo-btn-row">
                     <button className="forminfo-next-btn" onClick={() => handleNext(idx)}>

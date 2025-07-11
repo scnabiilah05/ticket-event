@@ -2,9 +2,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { formatPrice, formatPriceFromString } from "../../../utils/PriceUtils";
 import { RiVipCrownFill } from "react-icons/ri";
+import { IoRocket } from "react-icons/io5";
 
 const VIP_PRICE = import.meta.env.VITE_VIP_CLASS_PRICE;
-const ALL_CLASS_ID = import.meta.env.VITE_ALL_CLASS_ID;
+const ALL_CLASS_ID_MO = import.meta.env.VITE_ALL_CLASS_ID_MO;
+const ALL_CLASS_ID_NM = import.meta.env.VITE_ALL_CLASS_ID_NM;
+const ALL_CLASS_ID_NP = import.meta.env.VITE_ALL_CLASS_ID_NP;
+const BUNDLING_CLASS_ID_MO = import.meta.env.VITE_BUNDLING_CLASS_ID_MO;
+const BUNDLING_CLASS_ID_NM = import.meta.env.VITE_BUNDLING_CLASS_ID_NM;
+const BUNDLING_CLASS_ID_NP = import.meta.env.VITE_BUNDLING_CLASS_ID_NP;
 
 export const RenderClassSelection = ({
   selectedPackage,
@@ -27,13 +33,13 @@ export const RenderClassSelection = ({
     setSelectedClasses((prev) => {
       const updated = [...prev];
       updated[idx] = { ...updated[idx], id: value };
-      // Reset VIP jika kelas dikosongkan
+      // Reset Fast Track jika kelas dikosongkan
       if (!value) updated[idx].is_vip = false;
       return updated;
     });
   };
 
-  // Handler toggle VIP
+  // Handler toggle Fast Track
   const handleVipToggle = (idx) => {
     setSelectedClasses((prev) => {
       const updated = [...prev];
@@ -47,7 +53,7 @@ export const RenderClassSelection = ({
     let filtered = classes.filter(
       (cls) => !selectedClasses.some((sel, i) => sel.id == cls.id && i !== idx)
     );
-    if (selectedPackage?.uuid === import.meta.env.VITE_BUNDLING_CLASS_ID) {
+    if (selectedPackage?.uuid === BUNDLING_CLASS_ID_MO || selectedPackage?.uuid === BUNDLING_CLASS_ID_NM || selectedPackage?.uuid === BUNDLING_CLASS_ID_NP) {
       if (idx === 1 && selectedClasses[0].id) {
         const kelasPertama = classes.find((c) => c.id == selectedClasses[0].id);
         if (kelasPertama && kelasPertama.is_bundling === 0) {
@@ -80,6 +86,21 @@ export const RenderClassSelection = ({
     console.log(formDataArray, 'formDataArray')
     console.log(selectedPackage, 'selectedPackage')
     console.log(totalPayment, 'totalPayment')
+
+    const data = {
+      type_ticket_uuid: selectedPackage?.type_ticket_uuid,
+      package_uuid: selectedPackage?.uuid,
+      member: formDataArray,
+      class: selectedClasses,
+      total_vip: vipAddOns?.length,
+      total_member: selectedPackage?.total_member,
+      total_class: lengthClass,
+      member_id: formDataArray.map(member => member.id_gymmaster),
+      ktp_id: formDataArray.map(member => member.ktp),
+      class_id: selectedClasses.map(cls => cls.id),
+    }
+
+    conso
   }
 
   const handleNextStepWithValidation = () => {
@@ -98,7 +119,7 @@ export const RenderClassSelection = ({
 
   useEffect(() => {
     // Jika paket all-class, auto pilih semua kelas dan disable select
-    if (selectedPackage?.uuid === ALL_CLASS_ID) {
+    if (selectedPackage?.uuid === ALL_CLASS_ID_MO || selectedPackage?.uuid === ALL_CLASS_ID_NM || selectedPackage?.uuid === ALL_CLASS_ID_NP) {
       setSelectedClasses(
         Array.from({ length: lengthClass }, (_, idx) => ({
           id: classes[idx]?.id || '',
@@ -141,13 +162,13 @@ export const RenderClassSelection = ({
         <div className="class-selection-left">
           <div className="vip-info-box">
             <div className="vip-info-title">
-              <span className="vip-badge">VIP Upgrade</span>
+              <span className="vip-badge">Fast Track Upgrade</span>
               <span className="vip-info-price">(Rp100.000 /Class)</span>
             </div>
             <ul className="vip-info-list">
               <li>Fast-track check-in</li>
               <li>Smoother class access</li>
-              <li>Exclusive VIP badge</li>
+              <li>Exclusive Fast Track badge</li>
             </ul>
           </div>
           <div className="class-selection-note">
@@ -161,7 +182,7 @@ export const RenderClassSelection = ({
               <div className="class-slot-label-row">
                 <label>{`Class Name ${idx + 1}`}</label>
                 <div className="vip-toggle-row">
-                  <span>VIP Upgrade</span>
+                  <span>Fast Track Upgrade</span>
                   <label className="switch">
                     <input
                       type="checkbox"
@@ -178,7 +199,7 @@ export const RenderClassSelection = ({
                 value={selectedClasses[idx].id}
                 onChange={(e) => handleClassChange(idx, e.target.value)}
                 onFocus={getClasses}
-                disabled={selectedPackage?.uuid === ALL_CLASS_ID}
+                disabled={selectedPackage?.uuid === ALL_CLASS_ID_MO || selectedPackage?.uuid === ALL_CLASS_ID_NM || selectedPackage?.uuid === ALL_CLASS_ID_NP}
               >
                 <option value="">
                   { "Choose your class"}
@@ -213,7 +234,7 @@ export const RenderClassSelection = ({
                     <div className="summary-chosen-class-item" key={idx}>
                       {found.classname}
                       {clsObj.is_vip && (
-                        <span className="vip-badge small">VIP</span>
+                        <span className="vip-badge small"> <IoRocket />Fast Track</span>
                         // <RiVipCrownFill className="vip-badge small" />
                       )}
                     </div>
@@ -241,7 +262,7 @@ export const RenderClassSelection = ({
                   return found ? (
                     <div className="summary-addons-item" key={clsObj.id}>
                       <span>
-                        {found.classname} <span className="vip-badge small">VIP</span>
+                        {found.classname} <span className="vip-badge small">Fast Track</span>
                       </span>
                       <span>
                         Rp{selectedPackage?.is_group === 1

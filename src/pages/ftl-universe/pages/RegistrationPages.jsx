@@ -19,11 +19,12 @@ const STEPS = {
 };
 
 const DEFAULT_FORM = {
-  memberType: "member",
-  memberId: "",
-  ektp: "",
-  firstName: "",
-  lastName: "",
+  // memberType: "member",
+  is_member: 1,
+  id_gymmaster: "",
+  ktp: "",
+  first_name: "",
+  last_name: "",
   email: "",
   phone: "",
 };
@@ -39,9 +40,8 @@ const RegistrationPages = () => {
   const [isGroup, setIsGroup] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
 
-  const [formDataArray, setFormDataArray] = useState(
-    Array.from({ length: selectedPackage?.total_member }, () => ({ ...DEFAULT_FORM }))
-  );
+  // Moved formDataArray state from RenderFormInformation
+  const [formDataArray, setFormDataArray] = useState([ { ...DEFAULT_FORM } ]);
   
   // Countdown timer state
   const [timeLeft, setTimeLeft] = useState({
@@ -50,6 +50,13 @@ const RegistrationPages = () => {
     minutes: 0,
     seconds: 0
   });
+
+  // Initialize formDataArray when selectedPackage changes
+  useEffect(() => {
+    if (selectedPackage?.total_member) {
+      setFormDataArray(Array.from({ length: selectedPackage.total_member }, () => ({ ...DEFAULT_FORM })));
+    }
+  }, [selectedPackage]);
 
   const getTicketEvent = async () => {
     setIsLoading({ ...isLoading, ticketEvent: true });
@@ -148,12 +155,10 @@ const RegistrationPages = () => {
 
 
   const renderFormInformation = () => (
-
     <RenderFormInformation 
       handleNextStep={handleNextStep}
       handlePreviousStep={handlePreviousStep}
-      // lengthMember={selectedPackage?.total_member}
-      lengthMember={2}
+      lengthMember={selectedPackage?.total_member || 2}
       selectedPackage={selectedPackage}
       formDataArray={formDataArray}
       setFormDataArray={setFormDataArray}
@@ -168,6 +173,7 @@ const RegistrationPages = () => {
       selectedClass={selectedClass}
       setSelectedClass={setSelectedClass}
       lengthClass={selectedPackage?.total_class}
+      formDataArray={formDataArray}
     />
   );
 
