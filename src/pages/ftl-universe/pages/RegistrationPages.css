@@ -970,6 +970,7 @@
   flex-direction: column;
   gap: 8px;
   margin-bottom: 18px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .forminfo-card-header-title {
   color: #fff;
@@ -979,6 +980,7 @@
   width: 80vw;
   max-width: 1100px;
   padding: 0 32px 10px 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .forminfo-card-header-content {
   display: flex;
@@ -991,6 +993,7 @@
   font-size: 1.15rem;
   font-weight: 700;
   color: #1a2341;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .forminfo-card-header-price {
   display: flex;
@@ -1005,10 +1008,30 @@
   font-weight: 500;
 }
 .forminfo-card-header-mainprice {
-  font-size: 1.25rem;
-  color: #2563eb;
-  font-weight: 800;
+  font-size: 1.5rem;
+  color: #002B67;
+  /* font-weight: 800; */
   margin-left: 6px;
+}
+.forminfo-card-header-mainprice-currency {
+  font-size: 1.5rem;
+  color: #002B67;
+  font-weight: 800;
+  margin-left: 2px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.forminfo-card-header-mainprice-number {
+  font-size: 1.5rem;
+  color: #002B67;
+  /* font-weight: 800; */
+  margin-left: 6px;
+  font-family: var(--font-ftl-universe-header);
+}
+.forminfo-card-header-old-main-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 .forminfo-card-header-perclass {
   font-size: 0.95rem;
@@ -1044,6 +1067,7 @@
   padding: 0 0 24px 0;
   width: 80vw;
   max-width: 1100px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .forminfo-accordion {
@@ -2086,11 +2110,11 @@ input:checked + .slider:before {
 .ticket-landing-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 40px;
   justify-content: center;
-  width: 90vw;
+  width: 80vw;
   max-width: 1400px;
   margin: 0 auto;
+  margin-top: 80px;
 }
 .ticket-landing-card {
   background: rgba(255,255,255,0.13);
@@ -2101,18 +2125,19 @@ input:checked + .slider:before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 320px;
-  max-width: 400px;
+  min-width: 390px;
+  max-width: 600px;
   margin: 0 auto;
   overflow: visible;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 .ticket-landing-countdown-badge {
   position: absolute;
-  top: -56px;
+  top: -66px;
   left: 50%;
   transform: translateX(-50%);
   background: #e53935;
-  border-radius: 16px 16px 24px 24px;
+  border-radius: 16px;
   box-shadow: 0 4px 24px 0 #e5393550;
   padding: 12px 24px 10px 24px;
   color: #fff;
@@ -2138,10 +2163,11 @@ input:checked + .slider:before {
   align-items: center;
 }
 .ticket-landing-countdown-number {
-  font-size: 1.3rem;
-  font-weight: 800;
+  font-size: 2.3rem;
+  font-weight: 600;
   color: #fff;
   text-shadow: 0 2px 8px #000;
+  font-family: var(--font-ftl-universe-header);
 }
 .ticket-landing-countdown-unit {
   font-size: 0.8rem;
@@ -2150,8 +2176,8 @@ input:checked + .slider:before {
 }
 .ticket-landing-type-badge {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 80px;
+  left: 25px;
   background: linear-gradient(90deg,#e0e7ff,#fff);
   color: #222;
   font-size: 1rem;
@@ -2160,6 +2186,7 @@ input:checked + .slider:before {
   padding: 4px 18px;
   box-shadow: 0 2px 8px rgba(30,38,119,0.10);
   z-index: 2;
+  font-family: var(--font-ftl-universe-surgena-semibold);
 }
 .ticket-landing-type-badge.early {
   background: linear-gradient(90deg,#b4e0ff,#e0e7ff);
@@ -2169,12 +2196,14 @@ input:checked + .slider:before {
 }
 .ticket-landing-card-title {
   font-size: 2.1rem;
-  font-weight: 900;
+  font-weight: 500;
   color: #fff;
   text-shadow: 2px 4px 0 #000, 0 8px 24px #000;
-  margin: 60px 0 32px 0;
+  margin: 60px 0 0 0;
+  padding: 40px 0 0 0;
   letter-spacing: 0.04em;
   text-align: center;
+  font-family: var(--font-ftl-universe-header);
 }
 .ticket-landing-btn {
   width: 100%;

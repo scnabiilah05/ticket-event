@@ -387,11 +387,16 @@ const RenderFormInformation = ({ handleNextStep, handlePreviousStep, lengthMembe
       <div className="forminfo-card-header">
         <div className="forminfo-card-header-content">
           <div className="forminfo-card-header-package">
-            <span className="forminfo-card-header-package-name">{selectedPackage?.title || "All Classes Pass"}</span>
+            <span className="forminfo-card-header-package-name">{selectedPackage?.title}</span>
           </div>
           <div className="forminfo-card-header-price">
-            {selectedPackage?.strike_price && <span className="forminfo-card-header-oldprice">{`Rp ${formatPriceFromString(selectedPackage?.strike_price)}`}</span>}
-            <span className="forminfo-card-header-mainprice">{`Rp ${formatPriceFromString(selectedPackage?.price)}`}</span>
+            <div className="forminfo-card-header-old-main-row">
+              {selectedPackage?.strike_price && <span className="forminfo-card-header-oldprice">{`Rp ${formatPriceFromString(selectedPackage?.strike_price)}`}</span>}
+              <span className="forminfo-card-header-mainprice">
+                <span className="forminfo-card-header-mainprice-currency">Rp</span>
+                <span className="forminfo-card-header-mainprice-number">{formatPriceFromString(selectedPackage?.price)}</span>
+              </span>
+            </div>
             <span className="forminfo-card-header-perclass">{`Rp ${formatPriceFromString(selectedPackage?.class_price)} /class`}</span>
           </div>
         </div>
