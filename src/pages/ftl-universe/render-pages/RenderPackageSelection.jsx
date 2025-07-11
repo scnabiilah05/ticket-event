@@ -119,9 +119,22 @@ export const RenderPackageSelection = ({
                 onClick={() => {setSelectedPackage(pkg); setIsGroup(pkg?.is_group)}}
               >
                 <div className="package-list-title">{pkg?.title}</div>
-                <div className="package-list-price">
-                  Rp{" "}
-                  {formatPriceFromString(pkg?.price)}
+                <div className="package-list-price-row">
+                  <div className="package-list-price">
+                    <div className="package-list-price-currency">Rp</div>
+                    <div className="package-list-price-number">{formatPriceFromString(pkg?.class_price)}</div>
+                    <div className="package-list-price-unit">/Class</div>
+                  </div>
+                  <div className="package-list-total-price">
+                    <div className="package-list-total-price-currency">Total Price Rp</div>
+                    <div className="package-list-total-price-number">{formatPriceFromString(pkg?.price)}</div>
+                  </div>
+                  {pkg.strike_price && (
+                  <div className="package-list-oldprice">
+                    <div className="package-list-oldprice-currency">Rp</div>
+                    <div className="package-list-oldprice-number">{formatPriceFromString(pkg?.strike_price)}</div>
+                  </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -131,9 +144,15 @@ export const RenderPackageSelection = ({
               <div className="package-detail-title">
                 {selectedPackage?.title}
               </div>
-              <div className="package-detail-price">
-                Rp{" "}
-                {formatPriceFromString(selectedPackage?.price)}
+              <div className="package-detail-price-row  ">
+                <div className="package-detail-price">
+                  <div className="package-detail-price-currency">Rp</div>
+                  <div className="package-detail-price-number">{formatPriceFromString(selectedPackage?.price)}</div>
+                </div>
+                <div className="package-detail-total-price">
+                  <div className="package-detail-total-price-currency">Total Price Rp</div>
+                  <div className="package-detail-total-price-number">{formatPriceFromString(selectedPackage?.price)}</div>
+                </div>
               </div>
             </div>
             <div className="package-divider-header"></div>

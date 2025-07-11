@@ -491,8 +491,8 @@
 .package-selection-section,
 .package-selection-section * {
   color: #1a2341;
-  font-family: 'Inter', Arial, sans-serif;
-  font-weight: 500;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
 }
 .package-tabs-row .package-tab.active {
   color: #fff !important;
@@ -648,22 +648,89 @@
   border: 2px solid #b3c6ff;
 }
 .package-list-title {
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #1a2341;
+}
+.package-list-price-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
 .package-list-price {
   font-size: 1.5rem;
-  font-weight: 700;
-  color: #1a2341;
+  font-weight: 500;
+  color: #002B67;
   margin-left: 18px;
+  display: flex;
+  /* align-items: center; */
+  /* gap: 4px; */
+}
+.package-list-price-number {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #002B67;
+  margin-left: 4px;
+  font-family: var(--font-ftl-universe-header);
+}
+.package-list-price-currency {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #002B67;
+  margin-left: 4px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.package-list-price-unit {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #002B67;
+  margin-left: 4px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.package-list-total-price {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  /* color: #002B67; */
+}
+.package-list-total-price-currency {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #9a9eae;
+  margin-left: 4px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.package-list-total-price-number {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #9a9eae;
+  /* margin-left: 4px; */
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .package-list-oldprice {
-  font-size: 1rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
   color: #bfc3d6;
   text-decoration: line-through;
   font-weight: 500;
   margin-right: 8px;
+  text-align: right;
+}
+.package-list-oldprice-currency {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #bfc3d6;
+  margin-left: 4px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.package-list-oldprice-number {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #bfc3d6;
+  /* margin-left: 4px; */
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .package-list-perclass {
   font-size: 0.95rem;
@@ -682,6 +749,7 @@
   flex-direction: column;
   gap: 12px;
   min-width: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .package-detail-header-row {
   display: flex;
@@ -694,11 +762,49 @@
   font-weight: 700;
   color: #1a2341;
 }
-.package-detail-price {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #2563eb;
+.package-detail-price-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
+.package-detail-price {
+  display: flex;
+  /* font-size: 1.2rem;
+  font-weight: 700;
+  color: #002B67; */
+}
+.package-detail-price-currency {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #002B67;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.package-detail-price-number {  
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #002B67;
+  font-family: var(--font-ftl-universe-header);
+  margin-left: 4px;
+}
+.package-detail-total-price { 
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  /* color: #002B67; */
+}
+.package-detail-total-price-currency {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #9a9eae;
+}
+.package-detail-total-price-number {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #9a9eae;
+}
+
 .package-detail-perclass {
   font-size: 0.95rem;
   color: #7b819a;
@@ -1563,10 +1669,10 @@ input:checked + .slider:before {
   margin: 0 auto 32px auto;
 }
 .title-header {
-  font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+  font-family: var(--font-ftl-universe-header);
   font-size: 2rem;
   color: white;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 8px;
   word-break: break-word;
 }
@@ -1575,6 +1681,7 @@ input:checked + .slider:before {
   font-size: 1.1rem;
   margin-bottom: 0;
   word-break: break-word;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 .logo-header {
   width: 120px;
@@ -1617,6 +1724,7 @@ input:checked + .slider:before {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 .terms-item {
   display: flex;
@@ -1658,6 +1766,7 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   font-size: 1.08rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
   color: #fff;
   font-weight: 500;
   cursor: pointer;
@@ -1702,6 +1811,7 @@ input:checked + .slider:before {
 .terms-btn {
   min-width: 120px;
   padding: 12px 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 1.08rem;
   font-weight: 700;
   border-radius: 10px;

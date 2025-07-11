@@ -22,6 +22,17 @@
   --font-varien-outline: 'Varien Outline', sans-serif;
   --font-varien-italic-outline: 'Varien Italic Outline', sans-serif;
 
+  /* FTL-UNIVERSE 2025 */
+  --font-ftl-universe-surgena-light: 'Surgena Light', sans-serif;
+  --font-ftl-universe-surgena-regular: 'Surgena Regular', sans-serif;
+  --font-ftl-universe-surgena-medium-italic: 'Surgena Medium Italic', sans-serif;
+  --font-ftl-universe-surgena-semibold: 'Surgena SemiBold', sans-serif;
+  --font-ftl-universe-surgena-semibold-italic: 'Surgena SemiBold Italic', sans-serif;
+  --font-ftl-universe-header: 'Varien', sans-serif;
+  --font-ftl-universe-header-italic: 'Varien Italic', sans-serif;
+  --font-ftl-universe-header-outline: 'Varien Outline', sans-serif;
+  --font-ftl-universe-header-italic-outline: 'Varien Italic Outline', sans-serif;
+
   /* Fonts */
   --primary-font: var(--font-poppins);
   --secondary-font: var(--font-akira);
