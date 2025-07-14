@@ -77,7 +77,7 @@ export const RenderTicketSelection = ({
             
             return (
               <div className="ticket-landing-card" key={item?.uuid}>
-                {!isLocked && (
+                {!isLocked ? (
                   <div className="ticket-landing-countdown-badge">
                     <div className="ticket-landing-countdown-label">Limited Promo Ends In:</div>
                     <div className="ticket-landing-countdown-timer">
@@ -99,8 +99,14 @@ export const RenderTicketSelection = ({
                       </div>
                     </div>
                   </div>
+                ) : (
+                  <div className="ticket-landing-countdown-coming-soon-badge">
+                    <div className="ticket-landing-countdown-coming-soon">COMING SOON</div>
+                  </div>
                 )}
-                <div className="ticket-landing-type-badge">{item.uuid == generalSaleId ? 'General Sale' : 'Early Bid'}</div>
+                {!isLocked && (
+                  <div className="ticket-landing-type-badge">{item.uuid == generalSaleId ? 'General Sale' : 'Early Bid'}</div>
+                )}
                 <div className="ticket-landing-card-title">{item.uuid == generalSaleId ? 'NORMAL PRICE' : item.uuid == memberOnlyId ? 'MEMBER ONLY' : 'NON - MEMBER'}</div>
                 {isLocked ? (
                   <button className="ticket-landing-btn disabled" disabled>
