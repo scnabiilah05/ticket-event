@@ -1,0 +1,45 @@
+{
+    "type_ticket_uuid": "a987fbc9-4bed-4078-89a4-912be5e7fbd3",
+    "package_uuid": "3f5dc1e0-2f5b-4e63-950a-0a8e77b4265f",
+    "event_date": "2025-09-13",
+    "member": [
+        {
+            "member_id": "6659305348",
+            "ktp": "3175074507000013",
+            "first_name": "SITI CHAIRANI",
+            "last_name": "NABIILAH",
+            "email": "schanabiilah05@gmail.com",
+            "phone": "81806570513",
+            "is_member": 1,
+            "id_gymmaster": "105105"
+        }
+    ],
+    "class": [
+        {
+            "id": "251475078",
+            "is_vip": 0
+        },
+        {
+            "id": "251475069",
+            "is_vip": 1
+        },
+        {
+            "id": "251475080",
+            "is_vip": 1
+        }
+    ],
+    "total_vip": 2,
+    "total_member": 1,
+    "total_class": 3,
+    "member_id": [
+        "105105"
+    ],
+    "ktp_id": [
+        "3175074507000013"
+    ],
+    "class_id": [
+        "251475078",
+        "251475069",
+        "251475080"
+    ]
+}

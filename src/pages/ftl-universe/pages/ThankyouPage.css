@@ -1,0 +1,64 @@
+
+.thankyou-bg {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/images/BG-Universe.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  padding: 0 16px;
+}
+.thankyou-logo {
+  width: 180px;
+  height: auto;
+  margin-bottom: 32px;
+  filter: drop-shadow(0 8px 32px rgba(31,38,135,0.18));
+}
+.thankyou-title {
+  font-family: 'Orbitron', 'Inter', Arial, sans-serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 24px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 16px #6a5cff, 0 2px 24px #fff, 0 0 40px #6a5cff;
+  animation: thankyou-glow 2s ease-in-out infinite alternate;
+}
+@keyframes thankyou-glow {
+  from {
+    text-shadow: 0 0 16px #6a5cff, 0 2px 24px #fff, 0 0 40px #6a5cff;
+  }
+  to {
+    text-shadow: 0 0 32px #fff, 0 2px 32px #6a5cff, 0 0 60px #fff;
+  }
+}
+.thankyou-message {
+  color: #e0e6f7;
+  font-size: 1.18rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.thankyou-message b {
+  color: #fff;
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  .thankyou-logo {
+    width: 110px;
+    margin-bottom: 18px;
+  }
+  .thankyou-title {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+  }
+  .thankyou-message {
+    font-size: 1rem;
+  }
+} 
