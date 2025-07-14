@@ -1,5 +1,6 @@
 import React from 'react';
-
+import { instructors } from '../../../datas/ftl-universe/instructors';
+import { classes } from '../../../datas/ftl-universe/classes';
 export const RenderCountdownInfo = ({
   timeLeft = { days: 14, hours: 12, minutes: 25, seconds: 42 },
   onSeeGallery,
@@ -8,6 +9,8 @@ export const RenderCountdownInfo = ({
   locations = ['MULTI PURPOSE HALL', 'AGORA MALL', 'JAKARTA'],
   handleNextStep,
 }) => {
+  const listInstructors = instructors;
+  const listClasses = classes;
   return (
     <div className="hero-section">
       <div className="hero-content">
@@ -25,11 +28,13 @@ export const RenderCountdownInfo = ({
           </div>
         </div>
         <div className="hero-btn-row">
-          <button className="hero-btn hero-btn-gallery" onClick={onSeeGallery}>See Gallery</button>
+          {/* <button className="hero-btn hero-btn-gallery" onClick={onSeeGallery}>See Gallery</button> */}
           <button className="hero-btn hero-btn-ticket" onClick={handleNextStep}>Buy Ticket</button>
         </div>
         <div className="countdown-section">
-          <div className="countdown-title">COUNTDOWN TO <b>FTL UNIVERSE 2025</b></div>
+          <div className="countdown-title">COUNTDOWN TO 
+            <span className="countdown-title-bold">FTL UNIVERSE 2025</span>
+          </div>
           <div className="countdown-timer">
             <div className="countdown-item">
               <div className="countdown-number">{timeLeft.days}</div>
@@ -50,6 +55,16 @@ export const RenderCountdownInfo = ({
           </div>
         </div>
       </div>
+
+      {/* <div className="hero-instructors-row">
+        <div className="hero-instructors-item">
+          <img src="/images/instructors/instructor-1.png" alt="Instructor 1" />
+        </div>
+        <div className="hero-instructors-item">
+          <img src="/images/instructors/instructor-2.png" alt="Instructor 2" />
+        </div>
+        
+      </div> */}
     </div>
   );
 };

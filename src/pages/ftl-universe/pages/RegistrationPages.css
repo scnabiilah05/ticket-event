@@ -24,7 +24,7 @@
   text-align: center;
   width: 100%;
   max-width: 700px;
-  margin: 0 auto;
+  margin: 48px 0px;
 }
 
 .hero-logo img {
@@ -41,9 +41,9 @@
 }
 
 .hero-title {
-  font-family: 'Orbitron', 'Inter', Arial, sans-serif;
-  font-size: 3rem;
-  font-weight: 900;
+  font-family: var(--font-ftl-universe-header);
+  font-size: 2.5rem;
+  font-weight: 700;
   color: #fff;
   letter-spacing: 0.2em;
   text-shadow: 2px 4px 0 #000, 0 8px 24px #000;
@@ -55,12 +55,13 @@
   justify-content: center;
   align-items: center;
   gap: 18px;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: #fff;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 36px;
+  font-family: var(--font-ftl-universe-surgena-light);
 }
 
 .hero-location-sep {
@@ -86,6 +87,7 @@
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 2px 12px rgba(30, 38, 119, 0.10);
+  font-family: var(--font-ftl-universe-surgena-light);
 }
 
 .hero-btn-gallery {
@@ -115,10 +117,18 @@
 .countdown-title {
   font-size: 1.3rem;
   color: #fff;
-  font-weight: 700;
   letter-spacing: 0.05em;
   margin-bottom: 24px;
   text-transform: uppercase;
+  font-family: var(--font-ftl-universe-surgena-light);
+  font-weight: 700;
+}
+
+.countdown-title-bold {
+  font-family: var(--font-ftl-universe-header);
+  margin-left: 12px;
+  font-weight: 500;
+  font-size: 1.4rem;
 }
 
 .countdown-timer {
@@ -132,9 +142,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255,255,255,0.08);
-  border-radius: 18px;
-  padding: 24px 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid #ffffff76;
+  border-radius: 4px;
+  padding: 2px 22px;
   min-width: 90px;
   box-shadow: 0 4px 24px 0 #6a5cff40;
   backdrop-filter: blur(8px);
@@ -142,15 +153,16 @@
 }
 
 .countdown-number {
-  font-family: 'Orbitron', 'Inter', Arial, sans-serif;
-  font-size: 2.5rem;
-  font-weight: 900;
+  font-family: var(--font-ftl-universe-header);
+  font-size: 3rem;
+  font-weight: 700;
   color: #fff;
   text-shadow: 0 4px 24px #6a5cff80;
   margin-bottom: 6px;
 }
 
 .countdown-label {
+  font-family: var(--font-ftl-universe-surgena-light);
   font-size: 1rem;
   color: #fff;
   font-weight: 400;
@@ -479,8 +491,8 @@
   border-radius: 14px;
   box-shadow: 0 8px 32px rgba(30,38,119,0.10);
   padding: 32px 32px 32px 32px;
-  width: 80vw;
-  max-width: 1100px;
+  width: 70vw;
+  max-width: 900px;
   margin: 0 auto 0 auto;
   display: flex;
   flex-direction: column;
@@ -506,44 +518,24 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  width: 80vw;
-  max-width: 1100px;
+  width: 70vw;
+  max-width: 900px;
   margin: 0 auto 32px auto;
   /* background: rgba(255,255,255,0.85); */
-  border-radius: 24px;
+  border-radius: 14px;
   padding: 40px 30px 15px 30px;
   box-shadow: 0 8px 32px rgba(30, 38, 119, 0.12);
   /* backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px); */
 }
-.package-title-header {
-  font-family: 'Orbitron', 'Inter', Arial, sans-serif;
-  font-size: 2rem;
-  color: white;
-  font-weight: 700;
-  margin-bottom: 8px;
-  word-break: break-word;
-}
-.package-desc-header {
-  color: white;
-  font-size: 1.1rem;
-  margin-bottom: 0;
-  word-break: break-word;
-}
-.package-logo-header {
-  width: 120px;
-  height: auto;
-  margin-left: 32px;
-  margin-top: 0;
-}
 
 .package-divider-header {
   width: 80vw;
-  max-width: 1100px;
+  max-width: 900px;
   height: 1.5px;
   background: linear-gradient(90deg, #6a5cff 0%, #3e7fff 100%);
   opacity: 0.18;
-  margin: 0 auto 24px auto;
+  margin: 0 auto 12px auto;
   border-radius: 2px;
 }
 
@@ -648,7 +640,7 @@
   border: 2px solid #b3c6ff;
 }
 .package-list-title {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #1a2341;
 }
@@ -659,7 +651,7 @@
   gap: 4px;
 }
 .package-list-price {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 500;
   color: #002B67;
   margin-left: 18px;
@@ -668,21 +660,21 @@
   /* gap: 4px; */
 }
 .package-list-price-number {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 500;
   color: #002B67;
   margin-left: 4px;
   font-family: var(--font-ftl-universe-header);
 }
 .package-list-price-currency {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #002B67;
   margin-left: 4px;
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .package-list-price-unit {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #002B67;
   margin-left: 4px;
@@ -695,14 +687,14 @@
   /* color: #002B67; */
 }
 .package-list-total-price-currency {
-  font-size: 1.3rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #9a9eae;
   margin-left: 4px;
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 .package-list-total-price-number {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #9a9eae;
   /* margin-left: 4px; */
@@ -719,7 +711,7 @@
   text-align: right;
 }
 .package-list-oldprice-currency {
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #bfc3d6;
   margin-left: 4px;

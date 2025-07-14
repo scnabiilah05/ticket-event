@@ -82,10 +82,10 @@ export const RenderClassSelection = ({
   };
 
   const handleNextStep = () => {
-    console.log(selectedClasses, 'selectedClasses')
-    console.log(formDataArray, 'formDataArray')
-    console.log(selectedPackage, 'selectedPackage')
-    console.log(totalPayment, 'totalPayment')
+    // console.log(selectedClasses, 'selectedClasses')
+    // console.log(formDataArray, 'formDataArray')
+    // console.log(selectedPackage, 'selectedPackage')
+    // console.log(totalPayment, 'totalPayment')
 
     const data = {
       type_ticket_uuid: selectedPackage?.type_ticket_uuid,
@@ -97,10 +97,10 @@ export const RenderClassSelection = ({
       total_class: lengthClass,
       member_id: formDataArray.map(member => member.id_gymmaster),
       ktp_id: formDataArray.map(member => member.ktp),
-      class_id: selectedClasses.map(cls => cls.id),
+      class_name: selectedClasses.map(cls => cls.classname),
     }
 
-    conso
+    console.log(data, 'data')
   }
 
   const handleNextStepWithValidation = () => {
