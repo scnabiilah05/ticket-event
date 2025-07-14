@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import "../pages/RegistrationPages.css";
 import { FaLock } from "react-icons/fa";
 
+const generalSaleId = import.meta.env.VITE_GENERAL_SALE_TYPE;
+const memberOnlyId = import.meta.env.VITE_MEMBER_ONLY_TYPE;
+
 export const RenderTicketSelection = ({
   isSelecting,
   selectedTicket,
   handleSelectTicket,
   ticketEvent ,
+  handlePreviousStep,
 }) => {
-  // Ambil 3 jenis ticket: member, non-member, normal
-  const memberTicket = ticketEvent[0] || {};
-  const nonMemberTicket = ticketEvent[1] || {};
-  const normalTicket = ticketEvent[2] || {};
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -100,8 +100,8 @@ export const RenderTicketSelection = ({
                     </div>
                   </div>
                 )}
-                <div className="ticket-landing-type-badge early">Early Bird</div>
-                <div className="ticket-landing-card-title">{item.uuid == '123e4567-e89b-12d3-a456-426614174000' ? 'NORMAL PRICE' : item.uuid == "a987fbc9-4bed-4078-89a4-912be5e7fbd3" ? 'MEMBER ONLY' : 'NON - MEMBER'}</div>
+                <div className="ticket-landing-type-badge">{item.uuid == generalSaleId ? 'General Sale' : 'Early Bid'}</div>
+                <div className="ticket-landing-card-title">{item.uuid == generalSaleId ? 'NORMAL PRICE' : item.uuid == memberOnlyId ? 'MEMBER ONLY' : 'NON - MEMBER'}</div>
                 {isLocked ? (
                   <button className="ticket-landing-btn disabled" disabled>
                     <span className="ticket-landing-btn-lock"><FaLock /></span> Buy Ticket
@@ -117,6 +117,17 @@ export const RenderTicketSelection = ({
               </div>
             );
           })}
+      </div>
+      <div className="terms-btn-row">
+        <button
+          className="terms-btn terms-btn-prev"
+          onClick={handlePreviousStep}
+        >
+          Back
+        </button>
+        {/* <button className="terms-btn terms-btn-next" onClick={handleNextStep}>
+          Next
+        </button> */}
       </div>
     </div>
   );

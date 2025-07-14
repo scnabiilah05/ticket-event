@@ -1856,6 +1856,9 @@ input:checked + .slider:before {
   color: #fff;
   border: none;
 }
+.terms-btn-next:hover {
+  background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+}
 .terms-btn-next:disabled {
   background: #bfc8e6;
   color: #fff;
@@ -2178,28 +2181,31 @@ input:checked + .slider:before {
   position: absolute;
   top: 80px;
   left: 25px;
-  background: linear-gradient(90deg,#e0e7ff,#fff);
+  background-image: url('/images/rectangle.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   color: #222;
   font-size: 1rem;
   font-weight: 700;
-  border-radius: 8px;
+  border-radius: 18px;
   padding: 4px 18px;
   box-shadow: 0 2px 8px rgba(30,38,119,0.10);
   z-index: 2;
   font-family: var(--font-ftl-universe-surgena-semibold);
 }
-.ticket-landing-type-badge.early {
+/* .ticket-landing-type-badge.early {
   background: linear-gradient(90deg,#b4e0ff,#e0e7ff);
 }
 .ticket-landing-type-badge.general {
   background: linear-gradient(90deg,#e0e7ff,#fff);
-}
+} */
 .ticket-landing-card-title {
   font-size: 2.1rem;
   font-weight: 500;
   color: #fff;
   text-shadow: 2px 4px 0 #000, 0 8px 24px #000;
-  margin: 60px 0 0 0;
+  margin: 40px 0 0 0;
   padding: 40px 0 0 0;
   letter-spacing: 0.04em;
   text-align: center;
@@ -2219,6 +2225,12 @@ input:checked + .slider:before {
   box-shadow: 0 2px 12px 0 #2563eb40;
   transition: all 0.2s;
 }
+
+.ticket-landing-btn:hover {
+  background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+  /* transform: translateY(-2px) scale(1.03); */
+}
+
 .ticket-landing-btn.disabled,
 .ticket-landing-btn:disabled {
   background: #7ca7e6;

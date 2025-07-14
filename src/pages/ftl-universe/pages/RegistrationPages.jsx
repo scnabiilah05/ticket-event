@@ -142,6 +142,7 @@ const RegistrationPages = () => {
       handleSelectTicket={handleSelectTicket}
       ticketEvent={ticketEvent}
       isSelecting={isSelecting}
+      handlePreviousStep={handlePreviousStep}
     />
   );
 
